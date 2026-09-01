@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+<title id="title">OmniOS Business Operating System Architecture</title>
+<desc id="desc">Animated 3D-style architecture showing business data flowing into OmniOS and into AI insights and automation.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1020"/><stop offset="1" stop-color="#151d38"/></linearGradient>
+  <linearGradient id="core" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffcf70"/><stop offset="1" stop-color="#e88e27"/></linearGradient>
+  <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity=".15"/><stop offset="1" stop-color="#ffffff" stop-opacity=".04"/></linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity=".35"/></filter>
+  <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <style>
+    .label{font:600 19px Arial,sans-serif;fill:#f7f5ef}.small{font:500 13px monospace;fill:#aeb7d0}.line{fill:none;stroke:#7180a6;stroke-width:3;stroke-dasharray:9 10;animation:flow 3s linear infinite}.pulse{animation:pulse 2.2s ease-in-out infinite}.float{animation:float 4s ease-in-out infinite}.spin{transform-origin:600px 300px;animation:spin 18s linear infinite}@keyframes flow{to{stroke-dashoffset:-76}}@keyframes pulse{50%{opacity:.45;filter:url(#glow)}}@keyframes float{50%{transform:translateY(-8px)}}@keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</defs>
+<rect width="1200" height="620" rx="30" fill="url(#bg)"/>
+<g opacity=".12" class="spin"><circle cx="600" cy="300" r="240" fill="none" stroke="#ffcf70" stroke-width="1" stroke-dasharray="4 16"/><circle cx="600" cy="300" r="190" fill="none" stroke="#fff" stroke-width="1" stroke-dasharray="3 20"/></g>
+<text x="70" y="72" class="small">OMNIOS / OPERATING ARCHITECTURE</text>
+<text x="70" y="112" class="label" font-size="34">One business view. Connected intelligence.</text>
+<g class="float" filter="url(#shadow)">
+ <rect x="70" y="180" width="230" height="250" rx="22" fill="url(#glass)" stroke="#536080"/>
+ <text x="100" y="220" class="label">BUSINESS DATA</text>
+ <g class="small"><text x="100" y="260">Customers</text><text x="100" y="298">Tasks &amp; workflows</text><text x="100" y="336">Orders &amp; payments</text><text x="100" y="374">Team activity</text><text x="100" y="412">Sales &amp; reports</text></g>
+</g>
+<path class="line" d="M300 305 C370 305 390 305 445 305"/>
+<g class="float" filter="url(#shadow)">
+ <polygon points="480,205 720,205 760,255 720,395 480,395 440,345" fill="url(#core)" stroke="#ffe2a4" stroke-width="2"/>
+ <polygon points="480,205 720,205 720,395 480,395" fill="#12182b" opacity=".78"/>
+ <text x="535" y="290" class="label" font-size="32">OmniOS</text>
+ <text x="530" y="320" class="small">OPERATING CORE</text>
+ <text x="525" y="360" class="small">Connect · Understand · Act</text>
+</g>
+<path class="line" d="M760 305 C820 305 830 245 900 245"/><path class="line" d="M760 305 C820 305 830 365 900 365"/>
+<g class="float" filter="url(#shadow)">
+ <rect x="900" y="165" width="230" height="150" rx="22" fill="url(#glass)" stroke="#536080"/>
+ <text x="930" y="210" class="label">AI INTELLIGENCE</text><text x="930" y="248" class="small">Pattern detection</text><text x="930" y="276" class="small">Business insights</text><text x="930" y="304" class="small">Recommendations</text>
+</g>
+<g class="float" filter="url(#shadow)">
+ <rect x="900" y="350" width="230" height="150" rx="22" fill="url(#glass)" stroke="#536080"/>
+ <text x="930" y="395" class="label">AUTOMATION</text><text x="930" y="433" class="small">Follow-ups</text><text x="930" y="461" class="small">Workflow triggers</text><text x="930" y="489" class="small">Notifications</text>
+</g>
+<circle class="pulse" cx="760" cy="305" r="10" fill="#ffcf70"/>
+<text x="70" y="560" class="small">CURRENT: interactive frontend prototype  ·  FUTURE: PHP/MySQL + AI + automation</text>
+</svg>
