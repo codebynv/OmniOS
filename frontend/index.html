@@ -1,1 +1,750 @@
-<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OmniOS — Business Operating System Dashboard</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head><body><div class="app-layout"><aside class="sidebar" id="sidebar"><div class="sidebar-header"><a class="brand" href="index.html"><span class="mark"></span>OmniOS</a></div><nav class="sidebar-nav"><span class="nav-section-label">Main Menu</span><a class="nav-item active" data-view="dashboard">▦ <span>Dashboard</span></a><a class="nav-item" data-view="customers">♙ <span>Customers</span></a><a class="nav-item" data-view="tasks">✓ <span>Tasks</span><b class="nav-badge">3</b></a><a class="nav-item" data-view="orders">◈ <span>Orders</span></a><a class="nav-item" data-view="team">♟ <span>Team</span><span></span></a><span class="nav-section-label">Finance &amp; Insights</span><a class="nav-item" data-view="sales">₹ <span>Sales</span></a><a class="nav-item" data-view="analytics">▥ <span>Analytics</span></a><span class="nav-section-label">System</span><a class="nav-item" data-view="notifications">● <span>Notifications</span></a><a class="nav-item" data-view="settings">⚙ <span>Settings</span></a></nav><div class="sidebar-footer"><a class="explainer-link" href="omnios.html"><span>← Concept Page</span><span>DOCS</span></a></div></aside><div class="main-wrapper"><header class="topbar"><div class="topbar-left"><button class="mobile-menu-btn" id="mobileMenuBtn">☰</button><h1 class="page-title" id="pageTitle">Dashboard</h1></div><div class="topbar-right"><div class="topbar-search">⌕ <input placeholder="Global search… (Press /)"></div><button class="icon-btn" id="notifBtn">♧</button><div class="user-profile"><div class="user-avatar">NV</div><div class="user-meta"><span class="user-name">Nirav Vala</span><span class="user-role">Administrator</span></div></div></div></header><main class="content-area"><section class="view-section active" id="view-dashboard"><div class="kpi-row"><div class="kpi-card"><div class="lbl">Total Sales (MTD)</div><div class="val">₹4,82,500</div><div class="delta up">▲ 12.4% vs last month</div></div><div class="kpi-card"><div class="lbl">Pending Tasks</div><div class="val">18</div><div class="delta down">▼ 3 overdue</div></div><div class="kpi-card"><div class="lbl">Active Customer Accounts</div><div class="val">146</div><div class="delta neutral">12 demo records shown</div></div><div class="kpi-card"><div class="lbl">Team Members</div><div class="val">6</div><div class="delta neutral">● 4 online</div></div></div><div class="dash-grid-2col"><div><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Weekly Sales Performance</h3><p class="panel-subtitle">Revenue grouped by day across current week</p></div><span class="tag ok">Prototype Data</span></div><div class="chart-container"><div class="bar-chart-visual" id="dashSalesChart"></div></div></div><div class="panel"><div class="panel-header"><h3 class="panel-title">Recent Activity</h3><span class="panel-subtitle">Past 24 Hours</span></div><div class="activity-list"><div class="activity-item"><div class="activity-icon">👤</div><div><p class="activity-text">New lead <b>Divya Iyer</b> added from Iyer Data Labs.</p><span class="activity-time">Just now</span></div></div><div class="activity-item"><div class="activity-icon">📦</div><div><p class="activity-text">Order <b>#ORD-9401</b> (₹8,400) placed by <b>R. Sharma</b>.</p><span class="activity-time">2 hours ago</span></div></div><div class="activity-item"><div class="activity-icon">✅</div><div><p class="activity-text">Task <b>Confirm Patel Traders delivery</b> completed.</p><span class="activity-time">4 hours ago</span></div></div><div class="activity-item"><div class="activity-icon">💰</div><div><p class="activity-text">Invoice <b>₹45,000</b> settled for Shah Enterprises AMC.</p><span class="activity-time">Yesterday</span></div></div></div></div></div><div><div class="ai-notice-panel"><div class="ai-notice-head"><span class="ai-notice-tag">✦ OmniOS AI Insights</span><span class="panel-subtitle">AI Prototype • Demo Insight</span></div><ul class="ai-notice-list"><li><strong>Weekly sales dipped 6%</strong> — monthly revenue remains above the previous month.</li><li><strong>3 important customer follow-ups are pending</strong> — contact N. Desai and K. Mehta.</li><li><strong>Focus on pending tasks first</strong> — high-priority invoices need confirmation.</li></ul></div><div class="panel"><h3 class="panel-title">Quick Operations</h3><div class="quick-actions"><button class="btn btn-ghost" data-view-action="customers">+ Add New Customer</button><button class="btn btn-ghost" data-view-action="tasks">+ Create Follow-up Task</button><button class="btn btn-ghost" data-view-action="orders">▣ Review Pending Orders</button></div></div></div></div></section><section class="view-section" id="view-customers"><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Customer Relationship Directory</h3><p class="panel-subtitle">Manage client contact history, pipeline status, and accounts</p></div><button class="btn btn-primary" onclick="alert('Demo: customer creation form is planned for the full build.')">+ New Customer</button></div><div class="filter-bar"><div class="filter-group"><div class="search-input-box">⌕ <input id="customerSearch" placeholder="Search by name, email, or company…"></div><select class="select-filter" id="customerStatusFilter"><option value="all">All Statuses</option><option>Active</option><option>Inactive</option><option>Lead</option></select></div><span class="filter-count" id="customerCountDisplay"></span></div><div class="table-wrap"><table class="datatable"><thead><tr><th>Customer / Company</th><th>Email</th><th>Status</th><th>Last Contact</th><th>Total Spent</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div></section><section class="view-section" id="view-tasks"><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Interactive Task Kanban</h3><p class="panel-subtitle">Drag cards between columns and click cards for details.</p></div><span class="tag lead">Drag &amp; Drop Enabled</span></div></div><div class="kanban-board"><div class="kanban-column"><div class="kanban-col-head"><b>To Do</b><span class="kanban-count" id="count-todo">0</span></div><div class="kanban-cards-wrap" id="col-todo"></div></div><div class="kanban-column"><div class="kanban-col-head"><b>In Progress</b><span class="kanban-count" id="count-prog">0</span></div><div class="kanban-cards-wrap" id="col-in-progress"></div></div><div class="kanban-column"><div class="kanban-col-head"><b>Done</b><span class="kanban-count" id="count-done">0</span></div><div class="kanban-cards-wrap" id="col-done"></div></div></div></section><section class="view-section" id="view-orders"><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Orders &amp; Commercial Fulfillment</h3><p class="panel-subtitle">Track fulfillment progress, payments, and delivery timelines</p></div></div><div class="table-wrap"><table class="datatable"><thead><tr><th>Order ID</th><th>Customer</th><th>Item / Service</th><th>Amount</th><th>Status</th><th>Date</th><th>Payment</th></tr></thead><tbody id="ordersTableBody"></tbody></table></div></div></section><section class="view-section" id="view-team"><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Team Workspace Directory</h3><p class="panel-subtitle">Internal roster, departments, and availability</p></div><span class="tag ok">6 Active Members</span></div></div><div class="team-grid" id="teamGrid"></div></section><section class="view-section" id="view-sales"><div class="kpi-row"><div class="kpi-card"><div class="lbl">Annual Revenue (YTD)</div><div class="val">₹34.42L</div><div class="delta up">▲ +18.2%</div></div><div class="kpi-card"><div class="lbl">Avg Order Value</div><div class="val">₹24,800</div><div class="delta up">▲ +4.1%</div></div><div class="kpi-card"><div class="lbl">Collected This Month</div><div class="val">₹4.82L</div><div class="delta up">▲ 92% of goal</div></div><div class="kpi-card"><div class="lbl">Pending Invoices</div><div class="val">₹15,450</div><div class="delta down">2 overdue</div></div></div><div class="panel"><div class="panel-header"><div><h3 class="panel-title">Monthly Revenue Curve</h3><p class="panel-subtitle">Jan – Aug · Figures in Lakhs (INR)</p></div></div><div class="chart-container"><div class="bar-chart-visual" id="salesMonthlyChart"></div></div></div></section><section class="view-section" id="view-analytics"><div class="kpi-row"><div class="kpi-card"><div class="lbl">Lead Conversion Rate</div><div class="val">24.8%</div><div class="delta up">▲ +3.2%</div></div><div class="kpi-card"><div class="lbl">Average Deal Cycle</div><div class="val">14 Days</div><div class="delta up">▲ 2 days faster</div></div><div class="kpi-card"><div class="lbl">Client Retention Rate</div><div class="val">96.4%</div><div class="delta up">▲ Top tier</div></div><div class="kpi-card"><div class="lbl">Monthly Churn</div><div class="val">1.2%</div><div class="delta up">▼ -0.4%</div></div></div><div class="panel"><h3 class="panel-title">Acquisition Channel Breakdown</h3><div class="progress-list"><p>Direct Referral &amp; Existing Network <b>52%</b></p><div><i style="width:52%"></i></div><p>Inbound Organic Web <b>28%</b></p><div><i style="width:28%"></i></div><p>Direct Sales Outreach <b>20%</b></p><div><i style="width:20%"></i></div></div></div></section><section class="view-section" id="view-notifications"><div class="panel"><div class="panel-header"><div><h3 class="panel-title">System &amp; Pipeline Notifications</h3><p class="panel-subtitle">CRM, tasks, and sales trigger events</p></div><button class="btn btn-ghost" id="markAllReadBtn">Mark All as Read</button></div><div id="notifList"></div></div></section><section class="view-section" id="view-settings"><div class="settings-grid"><div class="panel"><h3 class="panel-title">Organization &amp; Profile</h3><form onsubmit="return false"><div class="form-group"><label class="form-label">Full Name</label><input class="form-input" value="Nirav Vala"></div><div class="form-group"><label class="form-label">Business Email</label><input class="form-input" value="nirav@omnios.local"></div><div class="form-group"><label class="form-label">Company Workspace Name</label><input class="form-input" value="OmniOS Operations Inc."></div><div class="form-group"><label class="form-label">Base Currency</label><select class="form-input"><option>INR (₹) — Indian Rupee</option></select></div><button class="btn btn-primary" id="saveSettingsBtn">Save Preferences</button></form></div><div class="panel"><h3 class="panel-title">Automation &amp; Notification Rules</h3><div class="toggle-row"><div><b>Daily AI Executive Digest</b><p>Prototype automation rule</p></div><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div><div class="toggle-row"><div><b>Overdue Task Alerts</b><p>Urgent notification when due date passes</p></div><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div><div class="toggle-row"><div><b>Auto-create Follow-up Tasks</b><p>Prototype automation rule</p></div><label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label></div></div></div></section></main></div></div><div class="modal-backdrop" id="taskModal"><div class="modal-box"><div class="modal-head"><b>Task Details</b><button class="modal-close-btn">✕</button></div><div class="modal-body"><h3 id="modalTaskTitle"></h3><p id="modalTaskDesc"></p><hr><p><b>Assignee:</b> <span id="modalTaskAssignee"></span></p><p><b>Due:</b> <span id="modalTaskDueDate"></span></p><p><b>Priority:</b> <span id="modalTaskPriority"></span></p><p><b>Status:</b> <span id="modalTaskStatus"></span></p></div></div></div><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniOS — Business Operating System Dashboard</title>
+  
+  <!-- Google Fonts: Same typography as omnios.html -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <!-- Local Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- ========================================================================
+       1. FIXED SIDEBAR
+       ======================================================================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="brand">
+        <span class="mark"></span>
+        <span>OmniOS</span>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main Menu</span>
+      
+      <a class="nav-item active" data-view="dashboard" href="#dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Dashboard</span>
+      </a>
+
+      <a class="nav-item" data-view="customers" href="#customers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        <span>Customers</span>
+      </a>
+
+      <a class="nav-item" data-view="tasks" href="#tasks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"></path>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+        <span>Tasks</span>
+        <span class="nav-badge">3</span>
+      </a>
+
+      <a class="nav-item" data-view="orders" href="#orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <span>Orders</span>
+      </a>
+
+      <a class="nav-item" data-view="team" href="#team">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <polyline points="16 11 18 13 22 9"></polyline>
+        </svg>
+        <span>Team</span>
+      </a>
+
+      <span class="nav-section-label">Finance &amp; Insights</span>
+
+      <a class="nav-item" data-view="sales" href="#sales">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"></line>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+        </svg>
+        <span>Sales</span>
+      </a>
+
+      <a class="nav-item" data-view="analytics" href="#analytics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="20" x2="18" y2="10"></line>
+          <line x1="12" y1="20" x2="12" y2="4"></line>
+          <line x1="6" y1="20" x2="6" y2="14"></line>
+        </svg>
+        <span>Analytics</span>
+      </a>
+
+      <span class="nav-section-label">System</span>
+
+      <a class="nav-item" data-view="notifications" href="#notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span>Notifications</span>
+      </a>
+
+      <a class="nav-item" data-view="settings" href="#settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="omnios.html" class="explainer-link" title="Open Project Concept Explainer">
+        <span>← Concept Page</span>
+        <span>DOCS</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ========================================================================
+       2. MAIN CONTENT AREA
+       ======================================================================== -->
+  <div class="main-wrapper">
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        <h1 class="page-title" id="pageTitle">Dashboard</h1>
+      </div>
+
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" placeholder="Global search… (Press /)">
+        </div>
+
+        <button class="icon-btn" id="notifBtn" aria-label="View Notifications" title="Notifications">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+          </svg>
+          <span class="dot-badge" id="notifDotBadge"></span>
+        </button>
+
+        <div class="user-profile">
+          <div class="user-avatar">NV</div>
+          <div class="user-meta">
+            <span class="user-name">Nirav Vala</span>
+            <span class="user-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container for View Sections -->
+    <main class="content-area">
+
+      <!-- ====================================================================
+           VIEW: DASHBOARD (Default)
+           ==================================================================== -->
+      <section class="view-section active" id="view-dashboard">
+        <!-- 4 KPI Stat Cards in a row -->
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="lbl">Total Sales (MTD)</div>
+            <div class="val">₹4,82,500</div>
+            <div class="delta up">
+              <span>▲ 12.4%</span>
+              <span style="color:var(--slate);">vs last month</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="lbl">Pending Tasks</div>
+            <div class="val">18</div>
+            <div class="delta down">
+              <span>▼ 3 overdue</span>
+              <span style="color:var(--slate);">action needed</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="lbl">Active Customer Accounts</div>
+            <div class="val">146</div>
+            <div class="delta neutral">
+              <span style="color:var(--slate);">12 demo records shown</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="lbl">Team Members</div>
+            <div class="val" id="dashTeamCount">6</div>
+            <div class="delta neutral">
+              <span id="dashTeamOnline">● 4 online</span>
+              <span style="color:var(--slate);">active now</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Dashboard Grid -->
+        <div class="dash-grid-2col">
+          <!-- Left Column: Sales Chart + Recent Activity -->
+          <div>
+            <!-- Weekly Sales Chart Panel -->
+            <div class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3 class="panel-title">Weekly Sales Performance</h3>
+                  <p class="panel-subtitle">Revenue grouped by day across current week</p>
+                </div>
+                <span class="tag ok">Prototype Data</span>
+              </div>
+              <div class="chart-container">
+                <div class="bar-chart-visual" id="dashSalesChart"></div>
+              </div>
+            </div>
+
+            <!-- Recent Activity List -->
+            <div class="panel">
+              <div class="panel-header">
+                <h3 class="panel-title">Recent Activity</h3>
+                <span style="font-family:var(--mono); font-size:0.75rem; color:var(--slate);">Past 24 Hours</span>
+              </div>
+              <div class="activity-list">
+                <div class="activity-item">
+                  <div class="activity-icon">👤</div>
+                  <div class="activity-content">
+                    <p class="activity-text">New lead <b>Divya Iyer</b> added from Iyer Data Labs.</p>
+                    <span class="activity-time">Just now</span>
+                  </div>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-icon">📦</div>
+                  <div class="activity-content">
+                    <p class="activity-text">Order <b>#ORD-9401</b> (₹8,400) placed by <b>R. Sharma</b>.</p>
+                    <span class="activity-time">2 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-icon">✅</div>
+                  <div class="activity-content">
+                    <p class="activity-text">Task <b>"Confirm Patel Traders delivery"</b> marked completed by <b>Nirav V.</b></p>
+                    <span class="activity-time">4 hours ago</span>
+                  </div>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-icon">💰</div>
+                  <div class="activity-content">
+                    <p class="activity-text">Invoice <b>₹45,000</b> settled for <b>Shah Enterprises AMC</b>.</p>
+                    <span class="activity-time">Yesterday</span>
+                  </div>
+                </div>
+
+                <div class="activity-item">
+                  <div class="activity-icon">⚙️</div>
+                  <div class="activity-content">
+                    <p class="activity-text">Automated reminder dispatched for <b>N. Desai</b> overdue invoice.</p>
+                    <span class="activity-time">Yesterday</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: AI Insights & Quick Action -->
+          <div>
+            <!-- AI Insights Quiet Notice Panel -->
+            <div class="ai-notice-panel">
+              <div class="ai-notice-head">
+                <span class="ai-notice-tag">✦ OmniOS AI Insights</span>
+                <span style="font-family:var(--mono); font-size:0.7rem; color:var(--slate);">AI Prototype • Demo Insight</span>
+              </div>
+              <ul class="ai-notice-list">
+                <li class="ai-notice-item">
+                  <strong>Weekly sales dipped 6%</strong> — despite monthly revenue remaining above the previous month.
+                </li>
+                <li class="ai-notice-item">
+                  <strong>3 important customer follow-ups are pending</strong> — Contact N. Desai and K. Mehta before today's close.
+                </li>
+                <li class="ai-notice-item">
+                  <strong>Focus on these pending tasks first</strong> — 2 high-priority invoices need confirmation to unlock ₹29,150.
+                </li>
+              </ul>
+            </div>
+
+            <!-- Quick Action Shortcut Panel -->
+            <div class="panel">
+              <h3 class="panel-title" style="margin-bottom:12px;">Quick Operations</h3>
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="document.querySelector('.nav-item[data-view=customers]').click()">
+                  <span>+</span> Add New Customer
+                </button>
+                <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="document.querySelector('.nav-item[data-view=tasks]').click()">
+                  <span>+</span> Create Follow-up Task
+                </button>
+                <button class="btn btn-ghost" style="justify-content:flex-start;" onclick="document.querySelector('.nav-item[data-view=orders]').click()">
+                  <span>📄</span> Review Pending Orders
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: CUSTOMERS
+           ==================================================================== -->
+      <section class="view-section" id="view-customers">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Customer Relationship Directory</h3>
+              <p class="panel-subtitle">Manage client contact history, pipeline status, and accounts</p>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Demo: To create a customer, use the input form in the full build.')">+ New Customer</button>
+          </div>
+
+          <!-- Working Search & Filter Controls -->
+          <div class="filter-bar">
+            <div class="filter-group">
+              <div class="search-input-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="customerSearch" placeholder="Search by name, email, or company…">
+              </div>
+
+              <select class="select-filter" id="customerStatusFilter">
+                <option value="all">All Statuses</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="Lead">Lead</option>
+              </select>
+            </div>
+
+            <div class="filter-count" id="customerCountDisplay">Loading customers…</div>
+          </div>
+
+          <!-- Real Working Customers Table -->
+          <div class="table-wrap">
+            <table class="datatable">
+              <thead>
+                <tr>
+                  <th>Customer / Company</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Last Contact</th>
+                  <th style="text-align: right;">Total Spent</th>
+                </tr>
+              </thead>
+              <tbody id="customerTableBody">
+                <!-- Injected by script.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: TASKS (Kanban Board)
+           ==================================================================== -->
+      <section class="view-section" id="view-tasks">
+        <div class="panel" style="margin-bottom:18px;">
+          <div class="panel-header" style="margin-bottom:0;">
+            <div>
+              <h3 class="panel-title">Interactive Task Kanban</h3>
+              <p class="panel-subtitle">Drag cards between columns to update prototype data instantly. Click any card for details.</p>
+            </div>
+            <span class="tag lead">Drag &amp; Drop Enabled</span>
+          </div>
+        </div>
+
+        <div class="kanban-board">
+          <!-- Column 1: To Do -->
+          <div class="kanban-column">
+            <div class="kanban-col-head">
+              <span class="kanban-col-title">To Do</span>
+              <span class="kanban-count" id="count-todo">0</span>
+            </div>
+            <div class="kanban-cards-wrap" id="col-todo">
+              <!-- Injected by script.js -->
+            </div>
+          </div>
+
+          <!-- Column 2: In Progress -->
+          <div class="kanban-column">
+            <div class="kanban-col-head">
+              <span class="kanban-col-title">In Progress</span>
+              <span class="kanban-count" id="count-prog">0</span>
+            </div>
+            <div class="kanban-cards-wrap" id="col-in-progress">
+              <!-- Injected by script.js -->
+            </div>
+          </div>
+
+          <!-- Column 3: Done -->
+          <div class="kanban-column">
+            <div class="kanban-col-head">
+              <span class="kanban-col-title">Done</span>
+              <span class="kanban-count" id="count-done">0</span>
+            </div>
+            <div class="kanban-cards-wrap" id="col-done">
+              <!-- Injected by script.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: ORDERS
+           ==================================================================== -->
+      <section class="view-section" id="view-orders">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Orders &amp; Commercial Fulfillment</h3>
+              <p class="panel-subtitle">Track fulfillment progress, payments, and delivery timelines</p>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="datatable">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Item / Service</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Payment Method</th>
+                </tr>
+              </thead>
+              <tbody id="ordersTableBody">
+                <!-- Injected by script.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: TEAM
+           ==================================================================== -->
+      <section class="view-section" id="view-team">
+        <div class="panel" style="margin-bottom:18px;">
+          <div class="panel-header" style="margin-bottom:0;">
+            <div>
+              <h3 class="panel-title">Team Workspace Directory</h3>
+              <p class="panel-subtitle">Internal roster, active department assignments, and availability</p>
+            </div>
+            <span class="tag ok">6 Active Members</span>
+          </div>
+        </div>
+
+        <div class="team-grid" id="teamGrid">
+          <!-- Injected by script.js -->
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: SALES
+           ==================================================================== -->
+      <section class="view-section" id="view-sales">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="lbl">Annual Revenue (YTD)</div>
+            <div class="val">₹34.42L</div>
+            <div class="delta up">▲ +18.2% vs target</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Avg Order Value</div>
+            <div class="val">₹24,800</div>
+            <div class="delta up">▲ +4.1%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Collected This Month</div>
+            <div class="val">₹4.82L</div>
+            <div class="delta up">▲ 92% of goal</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Pending Invoices</div>
+            <div class="val">₹15,450</div>
+            <div class="delta down">2 overdue</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Monthly Revenue Curve (Jan – Aug)</h3>
+              <p class="panel-subtitle">Figures in Lakhs (INR)</p>
+            </div>
+            <span class="tag lead">FY 2026</span>
+          </div>
+          <div class="chart-container">
+            <div class="bar-chart-visual" id="salesMonthlyChart"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: ANALYTICS
+           ==================================================================== -->
+      <section class="view-section" id="view-analytics">
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="lbl">Lead Conversion Rate</div>
+            <div class="val">24.8%</div>
+            <div class="delta up">▲ +3.2% vs benchmark</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Average Deal Cycle</div>
+            <div class="val">14 Days</div>
+            <div class="delta up">▲ 2 days faster</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Client Retention Rate</div>
+            <div class="val">96.4%</div>
+            <div class="delta up">▲ Top tier</div>
+          </div>
+          <div class="kpi-card">
+            <div class="lbl">Monthly Churn</div>
+            <div class="val">1.2%</div>
+            <div class="delta up">▼ -0.4% reduction</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">Acquisition Channel Breakdown</h3>
+              <p class="panel-subtitle">Distribution of incoming client inquiries</p>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:16px;">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;">
+                <span>Direct Referral &amp; Existing Network</span>
+                <span style="font-family:var(--mono); font-weight:600;">52% (₹2.50L)</span>
+              </div>
+              <div style="height:8px; background:var(--paper-dim); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:52%; background:var(--ink);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;">
+                <span>Inbound Organic Web</span>
+                <span style="font-family:var(--mono); font-weight:600;">28% (₹1.35L)</span>
+              </div>
+              <div style="height:8px; background:var(--paper-dim); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:28%; background:var(--signal);"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;">
+                <span>Direct Sales Outreach</span>
+                <span style="font-family:var(--mono); font-weight:600;">20% (₹0.97L)</span>
+              </div>
+              <div style="height:8px; background:var(--paper-dim); border-radius:4px; overflow:hidden;">
+                <div style="height:100%; width:20%; background:var(--slate);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: NOTIFICATIONS
+           ==================================================================== -->
+      <section class="view-section" id="view-notifications">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 class="panel-title">System &amp; Pipeline Notifications</h3>
+              <p class="panel-subtitle">System notifications generated across CRM, tasks, and sales triggers</p>
+            </div>
+            <button class="btn btn-ghost btn-sm" id="markAllReadBtn">Mark All as Read</button>
+          </div>
+
+          <div class="notif-list" id="notifList">
+            <!-- Injected by script.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           VIEW: SETTINGS
+           ==================================================================== -->
+      <section class="view-section" id="view-settings">
+        <div class="settings-grid">
+          <!-- Left: Profile & Business Setup -->
+          <div class="panel">
+            <h3 class="panel-title" style="margin-bottom:16px;">Organization &amp; Profile</h3>
+            
+            <div id="settingsAlert" style="display:none; padding:10px 14px; background:#E4F1E7; color:var(--good); font-size:0.85rem; border-radius:4px; margin-bottom:14px; font-weight:600;">
+              ✓ Preferences updated successfully.
+            </div>
+
+            <form onsubmit="event.preventDefault()">
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input class="form-input" type="text" value="Nirav Vala">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Business Email</label>
+                <input class="form-input" type="email" value="nirav@omnios.local">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Company Workspace Name</label>
+                <input class="form-input" type="text" value="OmniOS Operations Inc.">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Base Currency</label>
+                <select class="form-input select-filter">
+                  <option selected>INR (₹) — Indian Rupee</option>
+                  <option>USD ($) — US Dollar</option>
+                  <option>EUR (€) — Euro</option>
+                </select>
+              </div>
+
+              <button class="btn btn-primary" id="saveSettingsBtn" style="margin-top:8px;">Save Preferences</button>
+            </form>
+          </div>
+
+          <!-- Right: System Automation Toggles -->
+          <div class="panel">
+            <h3 class="panel-title" style="margin-bottom:16px;">Automation &amp; Notification Rules</h3>
+
+            <div class="toggle-row">
+              <div class="toggle-text">
+                <h4>Daily AI Executive Digest — Prototype</h4>
+                <p>Planned automation rule • Daily summary notification</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-text">
+                <h4>Overdue Task Alerts</h4>
+                <p>Send urgent notification when due date passes</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-text">
+                <h4>Auto-create Follow-up Tasks — Prototype</h4>
+                <p>Planned automation rule • Auto-generate task for new leads</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="toggle-row">
+              <div class="toggle-text">
+                <h4>Compact Table Density</h4>
+                <p>Fit more rows per screen on large monitors</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ========================================================================
+     MODAL: TASK DETAILS (Built with plain HTML/CSS/JS)
+     ======================================================================== -->
+<div class="modal-backdrop" id="taskModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 class="modal-title">Task Details</h3>
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4 id="modalTaskTitle" style="font-family:var(--display); font-size:1.15rem; margin-bottom:10px; color:var(--ink);"></h4>
+      <p id="modalTaskDesc" style="font-size:0.88rem; color:var(--slate); line-height:1.5; margin-bottom:18px;"></p>
+      
+      <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; font-size:0.84rem; padding-top:14px; border-top:1px solid var(--paper-dim);">
+        <div>
+          <span style="color:var(--slate); display:block; font-size:0.75rem; font-family:var(--mono);">ASSIGNEE</span>
+          <strong id="modalTaskAssignee" style="color:var(--ink);"></strong>
+        </div>
+        <div>
+          <span style="color:var(--slate); display:block; font-size:0.75rem; font-family:var(--mono);">DUE DATE</span>
+          <span id="modalTaskDueDate" style="font-family:var(--mono); color:var(--ink);"></span>
+        </div>
+        <div>
+          <span style="color:var(--slate); display:block; font-size:0.75rem; font-family:var(--mono);">PRIORITY</span>
+          <span class="tag risk" id="modalTaskPriority"></span>
+        </div>
+        <div>
+          <span style="color:var(--slate); display:block; font-size:0.75rem; font-family:var(--mono);">CURRENT STATUS</span>
+          <span class="tag wait" id="modalTaskStatus"></span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="modalCloseAction">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="script.js"></script>
+</body>
+</html>
