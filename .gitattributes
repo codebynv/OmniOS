@@ -1,0 +1,15 @@
+# Keep source and documentation files normalized across platforms
+* text=auto eol=lf
+
+*.html text
+*.css text
+*.js text
+*.md text
+*.svg text
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.mp4 binary
+*.mp3 binary
