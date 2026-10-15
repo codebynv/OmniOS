@@ -1,0 +1,49 @@
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  letter-spacing: 0.02em;
+}
+
+.status-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-badge.active,
+.status-badge.completed {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.status-badge.active .status-badge-dot,
+.status-badge.completed .status-badge-dot {
+  background: var(--success);
+}
+
+.status-badge.lead,
+.status-badge.pending,
+.status-badge.in_progress {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+.status-badge.lead .status-badge-dot,
+.status-badge.pending .status-badge-dot,
+.status-badge.in_progress .status-badge-dot {
+  background: var(--warning);
+}
+
+.status-badge.inactive,
+.status-badge.cancelled {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.status-badge.inactive .status-badge-dot,
+.status-badge.cancelled .status-badge-dot {
+  background: var(--danger);
+}

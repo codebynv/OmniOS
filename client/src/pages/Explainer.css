@@ -1,0 +1,941 @@
+/* ==========================================================================
+   OmniOS Public Explainer Page
+   Faithful port of the authoritative source page styles (omnioss.html).
+   All rules are scoped under .explainer-page so the authenticated workspace
+   design system (index.css) is never affected.
+   ========================================================================== */
+
+.explainer-page {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.explainer-page a { color: inherit; text-decoration: none; }
+.explainer-page img,
+.explainer-page svg { display: block; max-width: 100%; }
+
+.explainer-page .wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+@media (max-width: 640px) {
+  .explainer-page .wrap { padding: 0 20px; }
+}
+
+/* ---------- NAV ---------- */
+.explainer-page header.site {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(246, 244, 239, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-light);
+}
+.explainer-page .nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+}
+.explainer-page .brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+}
+.explainer-page .brand .mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--ink);
+  position: relative;
+  flex-shrink: 0;
+}
+.explainer-page .brand .mark::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 3px;
+  background: var(--signal);
+}
+.explainer-page .navlinks {
+  display: flex;
+  gap: 28px;
+  font-size: 0.92rem;
+  color: var(--ink-2);
+}
+.explainer-page .navlinks a {
+  position: relative;
+  padding: 4px 0;
+}
+.explainer-page .navlinks a:hover { color: var(--ink); }
+.explainer-page .navlinks a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: var(--signal);
+  transition: width 0.25s ease;
+}
+.explainer-page .navlinks a:hover::after { width: 100%; }
+.explainer-page .navcta {
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 9px 18px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+.explainer-page .navcta:hover { background: var(--ink-2); }
+.explainer-page .burger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+}
+.explainer-page .burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--ink);
+  margin: 5px 0;
+}
+@media (max-width: 820px) {
+  .explainer-page .navlinks {
+    position: fixed;
+    top: 63px;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    flex-direction: column;
+    gap: 0;
+    border-bottom: 1px solid var(--line-light);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    z-index: 60;
+  }
+  .explainer-page .navlinks.open { max-height: 320px; }
+  .explainer-page .navlinks a {
+    padding: 14px 32px;
+    width: 100%;
+    border-top: 1px solid var(--line-light);
+  }
+  .explainer-page .burger { display: block; }
+  .explainer-page .navcta { display: none; }
+}
+
+/* ---------- HERO ---------- */
+.explainer-page .hero {
+  padding: 88px 0 64px;
+  position: relative;
+  overflow: hidden;
+}
+.explainer-page .hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: end;
+}
+@media (max-width: 900px) {
+  .explainer-page .hero-grid { grid-template-columns: 1fr; }
+}
+.explainer-page .eyebrow-plain {
+  font-size: 0.85rem;
+  color: var(--slate);
+  margin-bottom: 18px;
+}
+.explainer-page .eyebrow-plain b { color: var(--ink); }
+.explainer-page h1.hero-title {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  font-size: clamp(2.4rem, 5.4vw, 4.1rem);
+  line-height: 1.03;
+  max-width: 11ch;
+}
+.explainer-page .hero-title em {
+  font-style: normal;
+  color: var(--signal);
+}
+.explainer-page .hero-sub {
+  margin-top: 22px;
+  font-size: 1.08rem;
+  color: var(--ink-2);
+  max-width: 46ch;
+  line-height: 1.6;
+}
+.explainer-page .hero-actions {
+  margin-top: 32px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.explainer-page .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.explainer-page .btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.explainer-page .btn-primary:hover { background: var(--ink-2); }
+.explainer-page .btn-ghost {
+  background: transparent;
+  border-color: var(--line-light);
+  color: var(--ink);
+}
+.explainer-page .btn-ghost:hover { border-color: var(--ink); }
+
+/* scattered-vs-unified visual — the four tools orbit the fixed OmniOS core */
+.explainer-page .hero-visual {
+  /*
+   * Card width and orbit radius are derived from the column width using
+   * container-query units, then capped on large widths. radius = 0.95 * card,
+   * so the horizontal reach is 0.95w + 0.5w = 1.45w ≈ 49% of the column —
+   * inside the container, and the resulting clearance keeps orbit cards from
+   * covering the central card's text.
+   */
+  --orbit-card-w: min(34cqw, 158px);
+  --orbit-center-w: min(31cqw, 146px);
+  --orbit-r: calc(var(--orbit-card-w) * 0.95);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 416px;
+  container-type: inline-size;
+}
+
+/* Orbit stage: flexes to fill the space above the caption. */
+.explainer-page .orbit {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+
+.explainer-page .orbit-ring {
+  position: relative;
+  width: 0;
+  height: 0;
+  transform: rotate(0deg);
+  animation: orbit-ring-spin 24s linear infinite;
+  will-change: transform;
+}
+
+/* Each slot angles the zero-size point out to the orbit radius. */
+.explainer-page .orbit-slot {
+  --angle: 0deg;
+  --tilt: 0deg;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(var(--angle)) translateX(var(--orbit-r));
+}
+.explainer-page .orbit-slot.s1 { --angle: 270deg; --tilt: -4deg; } /* top */
+.explainer-page .orbit-slot.s2 { --angle: 0deg; --tilt: 3deg; }   /* right */
+.explainer-page .orbit-slot.s3 { --angle: 90deg; --tilt: 2deg; }  /* bottom */
+.explainer-page .orbit-slot.s4 { --angle: 180deg; --tilt: -3deg; }/* left */
+
+/*
+ * Zero-size spin anchor counter-rotates against the ring, so each card's net
+ * world rotation stays at its fixed tilt and the text never spins.
+ */
+.explainer-page .orbit-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  transform: rotate(calc(var(--tilt) - var(--angle)));
+  animation: orbit-card-counter 24s linear infinite;
+  will-change: transform;
+}
+
+@keyframes orbit-ring-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes orbit-card-counter {
+  from { transform: rotate(calc(var(--tilt) - var(--angle))); }
+  to { transform: rotate(calc(var(--tilt) - var(--angle) - 360deg)); }
+}
+
+.explainer-page .scatter-note {
+  position: absolute;
+  box-sizing: border-box;
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: var(--ink-2);
+  box-shadow: 0 6px 18px rgba(18, 24, 43, 0.06);
+  overflow-wrap: break-word;
+}
+.explainer-page .scatter-note b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--slate);
+  margin-bottom: 2px;
+  text-transform: none;
+  overflow-wrap: anywhere;
+}
+
+/* Orbit cards: explicit width so text wraps naturally instead of collapsing
+   to min-content against the zero-size anchor. */
+.explainer-page .orbit-card .scatter-note {
+  top: 0;
+  left: 0;
+  width: var(--orbit-card-w);
+  max-width: var(--orbit-card-w);
+  transform: translate(-50%, -50%);
+}
+
+/* Central OmniOS card stays fixed at the centre of the orbit. */
+.explainer-page .n5 {
+  top: 50%;
+  left: 50%;
+  width: var(--orbit-center-w);
+  max-width: var(--orbit-center-w);
+  transform: translate(-50%, -50%) rotate(-1deg);
+  z-index: 3;
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.explainer-page .n5 b { color: var(--signal); }
+
+/* Caption lives in its own row below the orbit — never over the cards. */
+.explainer-page .converge-arrow {
+  position: static;
+  flex: 0 0 auto;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--slate);
+}
+
+/* Compact static fallback: columns too narrow for a clean circular orbit.
+   (mobile, and the narrow two-column band just above the mobile breakpoint) */
+@media (max-width: 640px), (min-width: 901px) and (max-width: 1099px) {
+  .explainer-page .hero-visual {
+    min-height: 0;
+    gap: 12px;
+  }
+  .explainer-page .orbit {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    place-items: stretch;
+  }
+  .explainer-page .orbit-ring,
+  .explainer-page .orbit-slot {
+    display: contents;
+  }
+  .explainer-page .orbit-card {
+    position: static;
+    width: auto;
+    height: auto;
+    transform: none;
+    animation: none;
+  }
+  .explainer-page .orbit-card .scatter-note {
+    position: static;
+    width: auto;
+    max-width: none;
+    transform: none;
+  }
+  .explainer-page .n5 {
+    position: static;
+    order: -1;
+    grid-column: 1 / -1;
+    width: auto;
+    max-width: none;
+    transform: none;
+    text-align: center;
+  }
+}
+
+/* Respect reduced-motion: hold the orbit in a restrained static arrangement. */
+@media (prefers-reduced-motion: reduce) {
+  .explainer-page .orbit-ring,
+  .explainer-page .orbit-card {
+    animation: none;
+  }
+}
+
+/* ---------- SECTION SHARED ---------- */
+.explainer-page section { padding: 76px 0; }
+.explainer-page .sec-head {
+  max-width: 640px;
+  margin-bottom: 44px;
+}
+.explainer-page .sec-kicker {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--slate);
+  margin-bottom: 10px;
+}
+.explainer-page h2.sec-title {
+  font-family: var(--display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+}
+.explainer-page .sec-desc {
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 1.02rem;
+  max-width: 56ch;
+}
+
+/* ---------- PROBLEM ---------- */
+.explainer-page .problem {
+  background: var(--ink);
+  color: var(--paper);
+}
+.explainer-page .problem .sec-kicker { color: var(--signal); }
+.explainer-page .problem .sec-desc { color: #B7BCCE; }
+.explainer-page .problem-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 36px;
+}
+@media (max-width: 820px) {
+  .explainer-page .problem-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.explainer-page .problem-cell {
+  background: var(--ink-2);
+  padding: 26px 22px;
+}
+.explainer-page .problem-cell .num {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--signal);
+}
+.explainer-page .problem-cell h3 {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  margin: 10px 0 8px;
+  font-weight: 600;
+}
+.explainer-page .problem-cell p {
+  font-size: 0.88rem;
+  color: #A6ACBE;
+  line-height: 1.55;
+}
+
+/* ---------- SOLUTION STEPS ---------- */
+.explainer-page .flow {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+.explainer-page .flow-item {
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  padding: 20px 22px;
+  flex: 1 1 150px;
+  min-width: 140px;
+}
+.explainer-page .flow-item h4 {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 600;
+}
+.explainer-page .flow-item p {
+  font-size: 0.82rem;
+  color: var(--slate);
+  margin-top: 6px;
+}
+.explainer-page .flow-arrow {
+  color: var(--slate);
+  font-family: var(--mono);
+  padding: 0 14px;
+  font-size: 1.1rem;
+}
+@media (max-width: 820px) {
+  .explainer-page .flow {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .explainer-page .flow-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+    padding: 6px 0;
+  }
+}
+
+/* Solution CTA → owner authentication */
+.explainer-page .solution-cta {
+  margin-top: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.explainer-page .solution-cta .btn-primary {
+  background: var(--signal);
+  color: var(--ink);
+  border-color: var(--signal);
+  font-weight: 700;
+}
+.explainer-page .solution-cta .btn-primary:hover {
+  background: #d9932c;
+  border-color: #d9932c;
+}
+
+/* ---------- DASHBOARD PREVIEW ---------- */
+.explainer-page .dash-shell {
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(18, 24, 43, 0.08);
+  margin-top: 40px;
+}
+.explainer-page .dash-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-light);
+  background: var(--paper-dim);
+}
+.explainer-page .dash-dots { display: flex; gap: 6px; }
+.explainer-page .dash-dots span {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--line-light);
+}
+.explainer-page .dash-search {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--slate);
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: 6px;
+  padding: 5px 12px;
+}
+.explainer-page .dash-body {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  min-height: 520px;
+}
+@media (max-width: 760px) {
+  .explainer-page .dash-body { grid-template-columns: 1fr; }
+  .explainer-page .dash-side { display: none; }
+}
+.explainer-page .dash-side {
+  border-right: 1px solid var(--line-light);
+  padding: 20px 0;
+  background: var(--paper-dim);
+}
+.explainer-page .dash-side button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  cursor: pointer;
+  border: none;
+  border-left: 2px solid transparent;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: var(--body);
+}
+.explainer-page .dash-side button .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--line-light);
+  flex-shrink: 0;
+}
+.explainer-page .dash-side button.active {
+  color: var(--ink);
+  font-weight: 600;
+  border-left-color: var(--signal);
+  background: var(--white);
+}
+.explainer-page .dash-side button.active .dot { background: var(--signal); }
+.explainer-page .dash-side button:hover { color: var(--ink); }
+.explainer-page .dash-main { padding: 26px 28px; }
+.explainer-page .dash-header-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.explainer-page .dash-header-row h3 {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+.explainer-page .dash-header-row span {
+  font-size: 0.82rem;
+  color: var(--slate);
+}
+
+.explainer-page .kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+@media (max-width: 700px) {
+  .explainer-page .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+.explainer-page .kpi {
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  padding: 16px;
+  background: transparent;
+}
+.explainer-page .kpi .lbl {
+  font-size: 0.78rem;
+  color: var(--slate);
+}
+.explainer-page .kpi .val {
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+.explainer-page .kpi .delta {
+  font-size: 0.76rem;
+  margin-top: 4px;
+  font-family: var(--mono);
+}
+.explainer-page .delta.up { color: var(--good); }
+.explainer-page .delta.down { color: var(--bad); }
+
+.explainer-page .dash-columns {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 900px) {
+  .explainer-page .dash-columns { grid-template-columns: 1fr; }
+}
+
+.explainer-page .panel {
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 18px;
+  background: transparent;
+}
+.explainer-page .panel h4 {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.explainer-page .panel h4 button {
+  font-size: 0.72rem;
+  font-family: var(--mono);
+  color: var(--slate);
+  background: none;
+  border: 1px solid var(--line-light);
+  border-radius: 5px;
+  padding: 4px 9px;
+  cursor: pointer;
+}
+.explainer-page .panel h4 button:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.explainer-page .bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 150px;
+  padding-top: 10px;
+}
+.explainer-page .bar-chart .col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.explainer-page .bar-chart .stick {
+  width: 100%;
+  height: 120px;
+  background: var(--paper-dim);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  overflow: hidden;
+}
+.explainer-page .bar-chart .stick i {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--ink);
+  border-radius: 4px 4px 0 0;
+  transition: height 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.explainer-page .bar-chart .col.hi .stick i { background: var(--signal); }
+.explainer-page .bar-chart .col span {
+  font-size: 0.68rem;
+  color: var(--slate);
+  font-family: var(--mono);
+}
+
+.explainer-page table.datatable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+.explainer-page table.datatable th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--slate);
+  font-size: 0.72rem;
+  font-family: var(--body);
+  background: transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--line-light);
+}
+.explainer-page table.datatable td {
+  padding: 10px 6px;
+  border-bottom: 1px solid var(--paper-dim);
+  color: var(--ink-2);
+}
+.explainer-page table.datatable tr:last-child td { border-bottom: none; }
+.explainer-page table.datatable td.empty-row {
+  color: var(--slate);
+  text-align: center;
+  padding: 18px 6px;
+}
+.explainer-page .tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-family: var(--body);
+  letter-spacing: normal;
+}
+.explainer-page .tag.ok { background: #E4F1E7; color: var(--good); }
+.explainer-page .tag.wait { background: #FBEEDC; color: #B57415; }
+.explainer-page .tag.risk { background: #F7E4DD; color: var(--bad); }
+
+.explainer-page .insight {
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 10px;
+  padding: 18px;
+  position: relative;
+}
+.explainer-page .insight .tagline {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  color: var(--signal);
+  margin-bottom: 8px;
+}
+.explainer-page .insight p {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #D9DCE6;
+}
+.explainer-page .insight ul {
+  margin-top: 10px;
+  padding-left: 18px;
+  font-size: 0.84rem;
+  color: #C7CBDA;
+}
+.explainer-page .insight li { margin-bottom: 5px; }
+
+.explainer-page .task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.explainer-page .task-list label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 2px;
+  font-size: 0.86rem;
+  border-bottom: 1px solid var(--paper-dim);
+  cursor: pointer;
+}
+.explainer-page .task-list label:last-child { border-bottom: none; }
+.explainer-page .task-list input[type="checkbox"] {
+  accent-color: var(--ink);
+  width: 15px;
+  height: 15px;
+}
+.explainer-page .task-list span.done {
+  text-decoration: line-through;
+  color: var(--slate);
+}
+
+.explainer-page .searchbox {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line-light);
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-family: var(--body);
+  color: #000;
+  margin-bottom: 12px;
+}
+.explainer-page .searchbox:focus { border-color: var(--ink); outline: none; }
+
+/* ---------- FEATURES ---------- */
+.explainer-page .feat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line-light);
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 40px;
+}
+@media (max-width: 820px) {
+  .explainer-page .feat-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .explainer-page .feat-grid { grid-template-columns: 1fr; }
+}
+.explainer-page .feat {
+  background: var(--white);
+  padding: 26px 22px;
+}
+.explainer-page .feat h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  margin-bottom: 8px;
+}
+.explainer-page .feat p {
+  font-size: 0.86rem;
+  color: var(--slate);
+  line-height: 1.55;
+}
+
+/* ---------- STACK ---------- */
+.explainer-page .stack-wrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  margin-top: 36px;
+}
+@media (max-width: 820px) {
+  .explainer-page .stack-wrap { grid-template-columns: repeat(2, 1fr); }
+}
+.explainer-page .stack-card {
+  border: 1px solid var(--line-light);
+  border-radius: 10px;
+  padding: 18px;
+  background: transparent;
+}
+.explainer-page .stack-card .k {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--signal);
+  text-transform: uppercase;
+}
+.explainer-page .stack-card h5 {
+  font-family: var(--display);
+  font-size: 1rem;
+  margin: 8px 0;
+  font-weight: 600;
+}
+.explainer-page .stack-card ul {
+  list-style: none;
+  font-size: 0.82rem;
+  color: var(--ink-2);
+}
+.explainer-page .stack-card li {
+  padding: 3px 0;
+  border-top: 1px dashed var(--line-light);
+}
+.explainer-page .stack-card li:first-child { border-top: none; }
+.explainer-page .cost-note {
+  margin-top: 26px;
+  border: 1px dashed var(--line-light);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 0.86rem;
+  color: var(--ink-2);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.explainer-page .cost-note b {
+  color: var(--good);
+  font-family: var(--mono);
+  flex-shrink: 0;
+}
+
+/* ---------- FOOTER ---------- */
+.explainer-page footer {
+  border-top: 1px solid var(--line-light);
+  padding: 40px 0;
+  margin-top: 20px;
+}
+.explainer-page .foot-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.explainer-page .foot-row small {
+  color: var(--slate);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,309 @@
+/* ==========================================================================
+   Topbar — matches frontend/style.css topbar
+   ========================================================================== */
+.topbar {
+  height: var(--topbar-h);
+  background: rgba(246, 244, 239, 0.94);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-light);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mobile-menu-btn {
+  display: none;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn { display: flex; align-items: center; }
+}
+
+.page-title {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Search */
+.topbar-search {
+  position: relative;
+  width: 240px;
+}
+.topbar-search input {
+  width: 100%;
+  padding: 7px 12px 7px 32px;
+  font-size: 0.84rem;
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: 6px;
+  outline: none;
+  color: var(--slate);
+  transition: border-color 0.15s ease;
+  cursor: default;
+}
+.topbar-search input:focus { border-color: var(--ink); }
+.topbar-search svg {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  color: var(--slate);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .topbar-search { display: none; }
+}
+
+/* Icon button */
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  color: var(--ink-2);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+.dot-badge {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  border: 1.5px solid var(--white);
+  display: block;
+}
+
+/* Unread count badge variant */
+.dot-badge.count {
+  top: -4px;
+  right: -4px;
+  width: auto;
+  height: auto;
+  min-width: 17px;
+  padding: 0 4px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  line-height: 16px;
+  color: var(--ink);
+}
+
+/* ---------- Notification bell dropdown ---------- */
+.notif-menu { position: relative; }
+
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  max-width: 88vw;
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 44px rgba(18, 24, 43, 0.14);
+  z-index: 60;
+  overflow: hidden;
+}
+
+.notif-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--line-light);
+  background: var(--paper-dim);
+}
+.notif-panel-head strong {
+  font-family: var(--display);
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.notif-panel-list {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.notif-panel-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--paper-dim);
+  padding: 11px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.notif-panel-item:hover { background: var(--paper); }
+.notif-panel-item.unread { background: #FDF6EA; }
+
+.notif-panel-icon {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  flex-shrink: 0;
+}
+
+.notif-panel-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.notif-panel-title {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.notif-panel-desc {
+  font-size: 0.76rem;
+  color: var(--slate);
+  line-height: 1.4;
+}
+.notif-panel-time {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  color: var(--slate);
+}
+
+.notif-panel-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--signal);
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+.notif-panel-empty {
+  padding: 22px 14px;
+  font-size: 0.82rem;
+  color: var(--slate);
+  text-align: center;
+}
+
+.notif-panel-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--line-light);
+  background: var(--paper-dim);
+}
+
+/* User profile pill */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 4px 4px 4px;
+  border-radius: 20px;
+  background: var(--white);
+  border: 1px solid var(--line-light);
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-meta {
+  display: flex;
+  flex-direction: column;
+  padding-right: 4px;
+}
+.user-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.user-role {
+  font-size: 0.68rem;
+  font-family: var(--mono);
+  color: var(--slate);
+}
+
+@media (max-width: 768px) {
+  .user-meta { display: none; }
+}
+
+/* Logout button inside profile pill */
+.logout-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--paper-dim);
+  border: 1px solid var(--line-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slate);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  margin-right: 2px;
+}
+.logout-btn:hover {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: #fff;
+}

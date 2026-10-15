@@ -1,0 +1,28 @@
+/* ==========================================================================
+   App Shell Layout — matches frontend/style.css app-layout structure
+   ========================================================================== */
+
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-wrapper {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .main-wrapper {
+    margin-left: 0;
+  }
+}
+
+.content-area {
+  padding: 28px;
+  flex: 1;
+  max-width: 1300px;
+}

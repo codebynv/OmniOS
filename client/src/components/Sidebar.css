@@ -1,0 +1,175 @@
+/* ==========================================================================
+   Sidebar — matches frontend/style.css exactly
+   ========================================================================== */
+
+/* Mobile overlay */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 24, 43, 0.35);
+  z-index: 39;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-overlay { display: block; }
+}
+
+/* Sidebar shell */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--paper);
+  border-right: 1px solid var(--line-light);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  transition: transform 0.2s ease;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+}
+
+/* Brand header */
+.sidebar-header {
+  height: var(--topbar-h);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line-light);
+  flex-shrink: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* The amber square mark */
+.brand .mark {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--ink);
+  position: relative;
+  flex-shrink: 0;
+}
+.brand .mark::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 3px;
+  background: var(--signal);
+}
+
+/* Nav */
+.sidebar-nav {
+  padding: 16px 12px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow-y: auto;
+}
+
+.nav-section-label {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate);
+  padding: 10px 12px 4px;
+  display: block;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--ink-2);
+  cursor: pointer;
+  position: relative;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  background: transparent;
+  transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+}
+.nav-item svg {
+  width: 17px;
+  height: 17px;
+  color: var(--slate);
+  flex-shrink: 0;
+  transition: color 0.18s ease;
+}
+.nav-item:hover {
+  background: var(--paper-dim);
+  color: var(--ink);
+}
+.nav-item:hover svg { color: var(--ink); }
+
+.nav-item.active {
+  background: var(--white);
+  color: var(--ink);
+  font-weight: 600;
+  border-color: var(--line-light);
+  border-left-color: var(--signal);
+  box-shadow: 0 1px 3px rgba(18, 24, 43, 0.04);
+}
+.nav-item.active svg { color: var(--signal); }
+
+.nav-badge {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+/* Footer */
+.sidebar-footer {
+  padding: 14px 16px;
+  border-top: 1px solid var(--line-light);
+  background: var(--paper-dim);
+  flex-shrink: 0;
+}
+
+.explainer-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  font-family: var(--mono);
+  color: var(--ink-2);
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  border: 1px solid var(--line-light);
+  transition: all 0.15s ease;
+}
+.explainer-link:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}

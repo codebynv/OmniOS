@@ -1,0 +1,170 @@
+.tasks-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tasks-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+}
+
+.task-counter-widget {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.counter-display {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-subtle);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--accent-primary);
+  padding: 0 8px;
+}
+
+.tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.task-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast);
+}
+
+.task-card:hover {
+  border-color: var(--accent-primary);
+}
+
+.task-card.done {
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+.task-card.done .task-title {
+  text-decoration: line-through;
+}
+
+.task-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.task-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.task-assignee {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.task-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.task-toggle-btn {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  transition: background var(--transition-fast);
+}
+
+.task-toggle-btn:hover {
+  background: var(--bg-card-hover);
+}
+
+/* ==========================================================================
+   Kanban board — move feedback, drag & drop, overflow safety
+   ========================================================================== */
+.task-feedback-slot:empty {
+  display: none;
+}
+.task-feedback-slot {
+  margin-bottom: 14px;
+}
+
+.kanban-empty {
+  font-size: 0.82rem;
+  color: var(--slate);
+  text-align: center;
+  padding: 24px 0;
+}
+
+.kanban-card-id {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--slate);
+}
+
+.kanban-card {
+  cursor: grab;
+}
+.kanban-card:active {
+  cursor: grabbing;
+}
+.kanban-card.dragging {
+  opacity: 0.45;
+  border-style: dashed;
+}
+.kanban-card.is-done {
+  opacity: 0.9;
+}
+.kanban-card.is-done .kanban-card-title.struck {
+  text-decoration: line-through;
+  color: var(--slate);
+}
+.kanban-card-title,
+.kanban-card-desc {
+  overflow-wrap: anywhere;
+}
+
+.kanban-column.drop-target {
+  border-color: var(--signal);
+  background: #FDF6EA;
+}
+
+.kanban-actions-row {
+  flex-wrap: wrap;
+}
+.kanban-action {
+  flex: 1 1 auto;
+  white-space: nowrap;
+  font-size: 0.76rem;
+}
+
+@media (max-width: 860px) {
+  .kanban-column { min-height: 0; }
+}
