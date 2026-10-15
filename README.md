@@ -1,278 +1,218 @@
-# OmniOS
+<!-- OmniOS README | Keep claims aligned with the current implementation -->
 
 <div align="center">
 
-# **OmniOS**
-### AI-Powered Business Operating System
+<img src="assets/omnios-architecture.svg" alt="OmniOS architecture" width="720" />
 
-**One workspace for business operations. One intelligence layer for what comes next.**
+# OmniOS
 
-[🚀 Run Project](https://github.com/codebynv/OmniOS) · [📐 Architecture](assets/omnios-architecture.svg)
+### One workspace. Clearer operations. Better business decisions.
+
+A business operations workspace concept bringing customers, tasks, orders, team activity and business summaries into one consistent experience.
+
+<p>
+  <a href="https://omni-os-zeta.vercel.app/"><strong>↗ Live Demo</strong></a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/codebynv/OmniOS"><strong>⌘ GitHub Repository</strong></a>
+</p>
+
+<p>
+  <img alt="React" src="https://img.shields.io/badge/Frontend-React-61DAFB?logo=react&logoColor=20232A" />
+  <img alt="Vite" src="https://img.shields.io/badge/Build-Vite-646CFF?logo=vite&logoColor=white" />
+  <img alt="PHP" src="https://img.shields.io/badge/Backend-PHP-777BB4?logo=php&logoColor=white" />
+  <img alt="MySQL" src="https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white" />
+  <img alt="Status" src="https://img.shields.io/badge/Status-Active%20Development-D88B2D" />
+</p>
 
 </div>
 
 ---
 
-## ✦ What is OmniOS?
+## The idea
 
-**OmniOS is a student-built concept for an AI-powered Business Operating System that brings essential business operations into one unified workspace.**
+Small businesses often manage customers, follow-ups, orders, team activity and sales information across separate spreadsheets and tools. The result is fragmented information and extra manual coordination.
 
-Instead of keeping customer information, tasks, orders, sales, team activity and reports across disconnected tools, OmniOS brings them together so a business can see what is happening from one place.
+**OmniOS explores a unified workspace for everyday business operations.** Its longer-term vision is to add an intelligence layer that can help interpret business data, surface useful signals and support repeatable workflows.
 
-The long-term vision adds an intelligence layer that can **understand business data, surface useful signals, recommend actions and automate repetitive workflows.**
+> **Project status:** The React frontend is deployed to Vercel. The PHP + MySQL backend is currently intended for local development and has not yet been deployed as a public API. The live demo therefore showcases the frontend; login and database-dependent actions may not work on the public deployment yet.
 
-> **Current stage:** Interactive frontend prototype built with HTML5, CSS3 and Vanilla JavaScript.
+## Preview the project
 
----
-
-## ◈ The Problem
-
-Small businesses often have information scattered across:
-
-`Customers` · `Tasks` · `Orders` · `Sales` · `Team` · `Reports`
-
-That creates a visibility problem:
-
-**Data exists → but the overall business picture is fragmented.**
-
-OmniOS approaches this with a unified operational workspace rather than another isolated CRUD screen.
-
----
-
-## ⚡ The OmniOS Idea
-
-```text
- Customer Data ─┐
- Tasks ─────────┤
- Orders ────────┤
- Sales ─────────┼──→  OMNIOS  ──→  Unified Business View
- Team Activity ─┤                    │
- Reports ───────┘                    ↓
-                              Intelligence Layer
-                              ↓              ↓
-                           Insights      Automation
-```
-
-### The product flow
-
-**Collect → Centralize → Connect → Understand → Recommend → Automate**
-
----
-
-## 🖥️ Current Frontend Prototype
-
-The current prototype focuses on demonstrating the product experience and interaction model.
-
-### Dashboard
-- Business KPIs
-- Weekly sales visualization
-- Recent activity
-- AI insight prototype panel
-- Quick operations
-
-### Customers
-- Customer directory
-- Search
-- Status filtering
-- Account information
-- Spending overview
-
-### Tasks
-- Interactive Kanban board
-- To Do / In Progress / Done
-- Priority labels
-- Assignees
-- Drag-and-drop status changes
-- Task detail modal
-
-### Orders
-- Order tracking
-- Customer information
-- Amounts
-- Fulfillment status
-- Payment method
-
-### Team
-- Team directory
-- Roles
-- Departments
-- Availability
-- Active task counts
-
-### Sales & Analytics
-- Revenue KPIs
-- Monthly revenue visualization
-- Acquisition channel breakdown
-- Business performance indicators
-
-### Notifications & Settings
-- Pipeline notifications
-- Unread state
-- Mark-all-as-read interaction
-- Profile/workspace settings
-- Prototype automation toggles
-
----
-
-## ✦ AI Layer — Product Vision
-
-AI is not being presented as a fake backend feature in the current prototype. The interface demonstrates **where intelligence will fit into the product**.
-
-Future intelligence can include:
-
-- AI Business Assistant
-- AI Meeting Summaries
-- AI Email Writer
-- AI Sales Assistant
-- Lead scoring
-- Predictive analytics
-- Business forecasting
-- Voice commands
-- OCR document processing
-- AI agents
-
-### Example
-
-```text
-Sales changes
-     ↓
-OmniOS analyzes business context
-     ↓
-Important signal detected
-     ↓
-Insight / recommendation
-     ↓
-Optional workflow automation
-```
-
----
-
-## 🧠 Why OmniOS?
-
-OmniOS is **not claiming that business-management software is new**.
-
-Existing platforms such as Odoo, Zoho One, Microsoft Dynamics 365, Salesforce and HubSpot already provide powerful business capabilities.
-
-The student-project positioning is different:
-
-> **Existing enterprise solutions can be powerful and complex. OmniOS explores a simpler, unified, AI-first business workspace focused on essential operations, intelligent insights and automation.**
-
-This makes the project technically interesting while keeping the claim realistic.
-
----
-
-## 🧩 Architecture Visual
-
-![OmniOS Architecture](assets/omnios-architecture.svg)
-
----
-
-## 🛠️ Technology
-
-### Current Review Build
-
-| Technology | Purpose |
+| Resource | Link |
 |---|---|
-| HTML5 | Structure & semantic layout |
-| CSS3 | Design, responsive layout, animation |
-| Vanilla JavaScript | Interactions & dynamic prototype data |
-| SVG | Lightweight visual assets |
-| Git / GitHub | Version control |
+| **Live frontend demo** | [omni-os-zeta.vercel.app](https://omni-os-zeta.vercel.app/) |
+| **Source code** | [github.com/codebynv/OmniOS](https://github.com/codebynv/OmniOS) |
+| **Architecture visual** | [assets/omnios-architecture.svg](assets/omnios-architecture.svg) |
 
-### Planned Evolution
+## What is in the current build?
+
+### Workspace experience
+
+- **Dashboard** — business overview and summary visuals.
+- **Customers** — customer listing, search and pagination, create, edit and delete.
+- **Tasks** — task board and status interactions.
+- **Orders** — order overview and fulfilment-oriented demo views.
+- **Team** — team directory and filtering.
+- **Sales & Analytics** — sample summaries and visualisations.
+- **Notifications** — unread/read interactions and notification controls.
+- **Settings** — workspace preference controls.
+
+The Customers module is the primary confirmed MySQL-backed CRUD workflow. Several other sections are interactive prototype views; their data persistence varies. Dashboard metrics and analytics visuals may use demonstration data.
+
+### Backend foundation
+
+- PHP API endpoints for customer operations.
+- MySQL persistence for owner accounts and customer records used by implemented flows.
+- PHP session-based owner authentication.
+- Server-side validation and prepared database statements.
+- JSON responses for frontend/API communication.
+
+### Product vision — not yet claimed as implemented
+
+- AI-generated business insights and forecasting.
+- Automated follow-ups and workflow execution.
+- AI assistant, lead scoring and document intelligence.
+- Persistent task, order and team modules.
+- Role-based access control and broader production operations.
+
+These are future directions, not features to assume are currently live.
+
+## Architecture
 
 ```text
-HTML + CSS + JS
-       ↓
-React / TypeScript
-       ↓
-PHP + MySQL
-       ↓
-REST APIs
-       ↓
-AI + Automation
-       ↓
-Production Platform
+┌───────────────────────────────────────┐
+│            React + Vite               │
+│ Dashboard · Customers · Workspace UI  │
+└───────────────────┬───────────────────┘
+                    │ HTTP / JSON
+                    ▼
+┌───────────────────────────────────────┐
+│               PHP API                 │
+│ Auth · Validation · Business logic    │
+└───────────────────┬───────────────────┘
+                    │ Prepared SQL
+                    ▼
+┌───────────────────────────────────────┐
+│                MySQL                  │
+│ Owner accounts · Customer records     │
+└───────────────────────────────────────┘
 ```
 
-The production stack is a roadmap, **not a claim about the current implementation**.
+The current repository also preserves the original `frontend/` HTML/CSS/JavaScript prototype. The React application is in `client/`; PHP endpoints are in `api/`; database setup files are in `database/`.
 
----
+## Tech stack
 
-## 💰 College-Friendly / ₹0 Prototype
-
-The current college prototype can be built and demonstrated with free/local tooling.
-
-**No paid hosting, domain or AI API is mandatory for the prototype.**
-
-Advanced AI APIs and cloud services can be introduced later if required.
-
----
-
-## 🗺️ Roadmap
-
-| Phase | Focus |
+| Technology | Role |
 |---|---|
-| **01** | Frontend prototype & UX |
-| **02** | PHP backend + MySQL |
-| **03** | REST APIs + authentication |
-| **04** | AI assistant + intelligent insights |
-| **05** | Workflow automation |
-| **06** | Predictive analytics & AI agents |
-| **07** | Production / SaaS evolution |
+| React | Component-based user interface |
+| Vite | Local development server and production build |
+| React Router | Client-side page navigation |
+| JavaScript, HTML and CSS | Frontend logic, structure and styling |
+| PHP | API endpoints, validation and session-based authentication |
+| MySQL | Persistent data for implemented backend flows |
+| XAMPP | Local Apache/PHP and MySQL environment |
+| Git & GitHub | Version control and source hosting |
+| Vercel | Frontend deployment |
 
----
+## Run OmniOS locally
 
-## 📁 Project Structure
+### Prerequisites
 
-```text
-OmniOS/
-├── index.html
-├── omnios.html
-├── style.css
-├── script.js
-├── assets/
-│   └── omnios-architecture.svg
-└── README.md
-```
+- Node.js and npm
+- XAMPP with Apache and MySQL
+- Git (optional, if cloning the repository)
 
----
-
-## ▶️ Run Locally
-
-No build step is required for the current frontend prototype.
+### 1. Get the code
 
 ```bash
 git clone https://github.com/codebynv/OmniOS.git
 cd OmniOS
 ```
 
-Then open **`omnios.html`** for the project explainer or **`index.html`** for the interactive dashboard.
+### 2. Start the PHP/MySQL environment
 
-For the best local experience, use VS Code + Live Server.
+1. Place the project under `C:\xampp\htdocs\OmniOS` if using the default XAMPP setup.
+2. Start **Apache** and **MySQL** from the XAMPP Control Panel.
+3. Set up the database using the SQL file and instructions in the repository.
+4. Check the database connection settings in `api/config/db.php`.
+5. Use the current `docs/DEMO_GUIDE.md` for local setup and demo-account instructions.
 
----
+### 3. Start the React frontend
 
-## 🎓 Academic Context
+Open a terminal in the project’s `client` directory:
 
-**Project:** OmniOS — AI-Powered Business Operating System  
-**Domain:** AI-powered Business Management & Automation  
-**Program:** B.Sc. Information Technology  
-**Stage:** Frontend Prototype  
-**Current Frontend:** HTML + CSS + JavaScript
+```bash
+cd client
+npm install
+npm run dev
+```
 
----
+Open the local URL printed by Vite, usually [http://localhost:5173](http://localhost:5173).
 
-## 👨‍💻 Author
+### 4. Build for deployment
 
-**Nirav Vala**  
-B.Sc. Information Technology
+From the `client` directory:
 
----
+```bash
+npm run lint
+npm run build
+```
+
+Vite writes the production frontend build to `client/dist/`. The PHP API is not executed by Vite and needs a PHP-compatible hosting environment.
+
+## Deployment notes
+
+The frontend is deployed at [https://omni-os-zeta.vercel.app/](https://omni-os-zeta.vercel.app/). Vercel serves the React frontend; it does not automatically host this project’s PHP/MySQL backend.
+
+To make backend-dependent functionality work in production:
+
+1. Deploy the PHP API to a PHP-compatible host.
+2. Provision a MySQL database and configure its credentials securely on the server.
+3. Configure the frontend to call the deployed API URL.
+4. Configure allowed origins, HTTPS, session cookies and other security settings for the production environment.
+5. Test login and customer CRUD against the hosted database.
+
+**Do not commit database passwords, production secrets or real user credentials to GitHub.**
+
+## Security and limitations
+
+- Frontend validation is for usability; the backend must validate every request independently.
+- Prepared statements help protect database queries involving user input.
+- Production use would require a security review covering HTTPS, session-cookie settings, CSRF protection, rate limiting, permissions, logging and backups.
+- The example business and records are fictional demonstration data.
+- Multi-currency support is not implemented; the workspace uses INR.
+- AI automation is a future direction, not a currently running AI service.
+
+## Roadmap
+
+- [x] React workspace frontend and routing
+- [x] PHP authentication/session foundation
+- [x] PHP + MySQL customer CRUD flow
+- [x] Frontend deployment to Vercel
+- [ ] Deploy PHP API and MySQL for public use
+- [ ] Persist additional modules (tasks, orders and team)
+- [ ] Expand permissions, audit history and reporting
+- [ ] Explore AI-assisted insights and workflow automation
+
+## Academic context
+
+| | |
+|---|---|
+| **Project** | OmniOS — Business Operations Management Platform |
+| **Student** | Nirav Vala |
+| **Programme** | B.Sc. Information Technology |
+| **Semester / Division** | Semester III / D |
+| **Enrollment number** | 25004500210223 |
+
+## About the project
+
+OmniOS is a student project exploring how a unified business workspace could make common operations easier to navigate. The current implementation focuses on the frontend experience, authentication foundation and customer data workflow, with a clear path for expanding backend persistence and intelligent capabilities.
 
 <div align="center">
 
-### **OmniOS**
-*Business operations, unified.*
+**OmniOS**  
+*One workspace. Clearer operations. Better business decisions.*
+
+[Open the live demo](https://omni-os-zeta.vercel.app/) · [Explore the code](https://github.com/codebynv/OmniOS)
 
 </div>
