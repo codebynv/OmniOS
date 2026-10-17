@@ -1,12 +1,12 @@
 # AI Output Validation
 
-Treat model output as untrusted data.
+Treat model output as untrusted input.
 
-- Validate structured output against an expected schema.
-- Handle missing or malformed fields.
-- Do not execute generated commands without explicit controls.
-- Apply authorization checks independently of model suggestions.
-- Keep sensitive information out of prompts unless required and permitted.
-- Record failures without logging confidential payloads.
+- Validate required fields and types.
+- Reject malformed structured output.
+- Apply business rules before saving or executing.
+- Escape content before rendering it in a UI.
+- Handle missing and unexpected values safely.
+- Keep authorization checks outside the model.
 
-AI-generated content should pass application validation before it changes business state.
+Do not let plausible-looking output bypass application validation.
