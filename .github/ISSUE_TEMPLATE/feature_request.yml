@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose an AI workflow improvement
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: User or operator problem
+    validations:
+      required: true
+  - type: textarea
+    id: safeguards
+    attributes:
+      label: Validation and safety considerations
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+    validations:
+      required: true
