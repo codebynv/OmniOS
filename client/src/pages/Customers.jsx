@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useAuth } from '../context/AuthContext'
 import { customersApi } from '../services/api'
 import StatusBadge from '../components/StatusBadge'
 import { formatIndianMobile, isValidIndianMobile } from '../utils/validation'
@@ -19,7 +20,11 @@ import './Customers.css'
 const EMPTY_FORM = { name: '', email: '', company: '', phone: '' }
 
 export default function Customers() {
+  const { user, isTeamMember } = useAuth()
+  const canManageCustomers = isTeamMember || (user?.role === 'team_member')
+
   const [customers, setCustomers] = useState([])
+
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total_records: 0, total_pages: 1, search: '' })
   const [search, setSearch] = useState('')
   const [loading, setLoading] = useState(true)
@@ -84,12 +89,14 @@ export default function Customers() {
 
   // ── Modal helpers ──────────────────────────────────────────────
   const openCreate = () => {
+    if (!canManageCustomers) return
     setFormData(EMPTY_FORM)
     setFormErrors({})
     setModalMode('create')
   }
 
   const openEdit = (customer) => {
+    if (!canManageCustomers) return
     setSelectedCustomer(customer)
     setFormData({
       name: customer.name || '',
@@ -102,6 +109,7 @@ export default function Customers() {
   }
 
   const openDelete = (customer) => {
+    if (!canManageCustomers) return
     setSelectedCustomer(customer)
     setModalMode('delete')
   }
@@ -249,28 +257,35 @@ export default function Customers() {
               Manage enterprise client accounts, communication details, and status.
             </p>
           </div>
-          <button
-            type="button"
-            className="btn btn-primary add-customer-btn"
-            onClick={openCreate}
-            id="btn-add-customer"
-          >
-            <svg
-              className="btn-plus-icon"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              aria-hidden="true"
+{canManageCustomers ? (
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={openCreate}
+              id="btn-add-customer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
             >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            <span>Add Customer</span>
-          </button>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              <span>Add Customer</span>
+            </button>
+          ) : (
+            <span className="tag lead" style={{ fontSize: '0.8rem', padding: '6px 14px' }}>
+              👁 Owner View &bull; Read-Only Directory
+            </span>
+          )}
         </div>
 
         {/* Success Toast */}
@@ -342,10 +357,9 @@ export default function Customers() {
                   ? `No results for "${pagination.search}". Try a different search.`
                   : 'Add your first customer to get started.'}
               </p>
-              {!pagination.search && (
-                <button type="button" className="btn btn-primary add-customer-btn" onClick={openCreate}>
+{!pagination.search && canManageCustomers && (
+                <button type="button" className="btn btn-primary" onClick={openCreate} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                   <svg
-                    className="btn-plus-icon"
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
@@ -353,6 +367,7 @@ export default function Customers() {
                     stroke="currentColor"
                     strokeWidth="2.4"
                     strokeLinecap="round"
+                    strokeLinejoin="round"
                     aria-hidden="true"
                   >
                     <line x1="12" y1="5" x2="12" y2="19" />
@@ -380,7 +395,7 @@ export default function Customers() {
                       <th>Company</th>
                       <th>Phone</th>
                       <th>Status</th>
-                      <th className="actions-col">Actions</th>
+                      {canManageCustomers && <th className="actions-col">Actions</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -394,26 +409,28 @@ export default function Customers() {
                         <td>{c.company || <span style={{ color: 'var(--text-dim)' }}>—</span>}</td>
                         <td>{c.phone || <span style={{ color: 'var(--text-dim)' }}>—</span>}</td>
                         <td><StatusBadge status="active" /></td>
-                        <td className="actions-col">
-                          <div className="row-actions">
-                            <button
-                              type="button"
-                              className="btn-ghost action-btn"
-                              onClick={() => openEdit(c)}
-                              aria-label={`Edit ${c.name}`}
-                            >
-                              ✏ Edit
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-ghost action-btn danger"
-                              onClick={() => openDelete(c)}
-                              aria-label={`Delete ${c.name}`}
-                            >
-                              🗑 Delete
-                            </button>
-                          </div>
-                        </td>
+                        {canManageCustomers && (
+                          <td className="actions-col">
+                            <div className="row-actions">
+                              <button
+                                type="button"
+                                className="btn-ghost action-btn"
+                                onClick={() => openEdit(c)}
+                                aria-label={`Edit ${c.name}`}
+                              >
+                                ✏ Edit
+                              </button>
+                              <button
+                                type="button"
+                                className="btn-ghost action-btn danger"
+                                onClick={() => openDelete(c)}
+                                aria-label={`Delete ${c.name}`}
+                              >
+                                🗑 Delete
+                              </button>
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -462,7 +479,7 @@ export default function Customers() {
       </div>
 
       {/* ── Modal Overlay ── */}
-      {modalMode && (
+      {modalMode && canManageCustomers && (
         <div className="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="customer-modal-title" onClick={(e) => { if (e.target === e.currentTarget) closeModal() }}>
           <div className="modal-card">
 

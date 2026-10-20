@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { NotificationsProvider } from './context/NotificationsContext'
-import ProtectedRoute from './components/ProtectedRoute'
+import ProtectedRoute, { OwnerOnlyRoute } from './components/ProtectedRoute'
 import Layout from './components/Layout'
 import Explainer from './pages/Explainer'
 import Login from './pages/Login'
@@ -36,7 +36,7 @@ export default function App() {
             <Route path="/" element={<Explainer />} />
             <Route path="/login" element={<Login />} />
 
-            {/* Protected routes — requires valid owner session */}
+            {/* Protected routes — accessible to both Owner and Team Member */}
             <Route
               path="/dashboard"
               element={
@@ -78,36 +78,6 @@ export default function App() {
               }
             />
             <Route
-              path="/team"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Team />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/sales"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Sales />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Analytics />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
               path="/notifications"
               element={
                 <ProtectedRoute>
@@ -124,6 +94,44 @@ export default function App() {
                   <Layout>
                     <Settings />
                   </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Owner-only routes */}
+            <Route
+              path="/team"
+              element={
+                <ProtectedRoute>
+                  <OwnerOnlyRoute>
+                    <Layout>
+                      <Team />
+                    </Layout>
+                  </OwnerOnlyRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/sales"
+              element={
+                <ProtectedRoute>
+                  <OwnerOnlyRoute>
+                    <Layout>
+                      <Sales />
+                    </Layout>
+                  </OwnerOnlyRoute>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ProtectedRoute>
+                  <OwnerOnlyRoute>
+                    <Layout>
+                      <Analytics />
+                    </Layout>
+                  </OwnerOnlyRoute>
                 </ProtectedRoute>
               }
             />

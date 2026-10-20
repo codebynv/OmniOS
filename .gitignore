@@ -1,0 +1,46 @@
+# Exclude database backup dump files
+database/backups/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Backup and temporary files
+*.bak
+*.bak2
+*.bak_*
+*.tmp
+*~
+
+# Node dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+client/dist/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test files
+coverage/
+.nyc_output/
+
+# PHP
+vendor/
+composer.phar

@@ -83,16 +83,9 @@ export const TEAM_MEMBERS = [
 ]
 
 // ─────────────────────────────────────────────────────────────────────────────
-// NOTIFICATIONS
+// NOTIFICATIONS (Replaced by database-driven notifications in Phase 4I)
 // ─────────────────────────────────────────────────────────────────────────────
-export const INITIAL_NOTIFICATIONS = [
-  { id: 1, title: 'Overdue Payment Alert',        desc: 'ORD-9403 from Desai Tech Solutions (₹2,150) is now 3 days past the payment due date.', time: '10 mins ago',  icon: '⚠️', unread: true  },
-  { id: 2, title: 'New Lead: Divya Iyer',         desc: 'Divya Iyer from Iyer Data Labs submitted an inquiry form. Follow up before end of day.', time: '1 hour ago',   icon: '👤', unread: true  },
-  { id: 3, title: 'Order ORD-9402 Delivered',     desc: 'Ergonomic Office Chairs ×6 for Patel Traders marked delivered by courier.',              time: 'Yesterday',    icon: '📦', unread: false },
-  { id: 4, title: 'Task Completed',               desc: 'Nirav V. completed "Draft Q3 AMC renewal agreement" for Shah Enterprises.',              time: '1 day ago',    icon: '✅', unread: false },
-  { id: 5, title: 'Database Backup Complete',     desc: 'Automated nightly MySQL backup completed successfully.',                                  time: '2 days ago',   icon: '🗄️', unread: false },
-  { id: 6, title: 'GST Filing Reminder',          desc: 'GSTR-1 filing is due in 7 days. Manaswi K. has started reconciliation.',                 time: '3 days ago',   icon: '📋', unread: false },
-]
+export const INITIAL_NOTIFICATIONS = []
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SALES — Monthly revenue (FY 2026, Jan–Oct, demo figures)

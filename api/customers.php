@@ -26,8 +26,15 @@ require_once __DIR__ . '/config/session.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $conn = getDbConnection();
 
-// Enforce owner authentication on customer data operations
-$currentOwner = requireAuth($conn);
+// Enforce user authentication on customer data operations
+$currentUser = requireAuth($conn);
+$businessId = isset($currentUser['business_id']) ? (int) $currentUser['business_id'] : 0;
+if ($businessId <= 0) {
+    sendJsonResponse(403, [
+        'success' => false,
+        'error'   => 'Access denied. User is not associated with a valid business.'
+    ]);
+}
 
 /**
  * Helper to parse request payload (supports both JSON body and standard form data).
@@ -143,24 +150,39 @@ function validateCustomerData(array $data, bool $isUpdate = false): array {
 }
 
 // ============================================================================
-// METHOD DISPATCHING
+// METHOD DISPATCHING & ROLE-BASED ACCESS CONTROL
 // ============================================================================
 
 switch ($method) {
     case 'GET':
-        handleGet($conn);
+        // Both Owner and Team Member are permitted to list and view customer records
+        if (!in_array($currentUser['role'], ['owner', 'team_member'], true)) {
+            sendJsonResponse(403, [
+                'success' => false,
+                'error'   => 'Access denied. You do not have permission to view customer records.'
+            ]);
+        }
+        handleGet($conn, $currentUser);
         break;
 
     case 'POST':
-        handlePost($conn);
-        break;
-
     case 'PUT':
-        handlePut($conn);
-        break;
-
     case 'DELETE':
-        handleDelete($conn);
+        // Only Team Members have permission to create, edit, or delete customer records.
+        // Owners have read-only access.
+        if ($currentUser['role'] !== 'team_member') {
+            sendJsonResponse(403, [
+                'success' => false,
+                'error'   => 'Access denied. Only Team Members have permission to create, edit, or delete customer records. Owners have read-only access.'
+            ]);
+        }
+        if ($method === 'POST') {
+            handlePost($conn, $currentUser);
+        } elseif ($method === 'PUT') {
+            handlePut($conn, $currentUser);
+        } else {
+            handleDelete($conn, $currentUser);
+        }
         break;
 
     default:
@@ -178,7 +200,9 @@ switch ($method) {
 /**
  * Handle GET requests (Single customer or paginated list with search).
  */
-function handleGet(mysqli $conn): void {
+function handleGet(mysqli $conn, array $currentUser): void {
+    $businessId = (int) $currentUser['business_id'];
+
     // 1. Single Customer Request: ?id=
     if (isset($_GET['id'])) {
         $idParam = $_GET['id'];
@@ -190,12 +214,12 @@ function handleGet(mysqli $conn): void {
         }
 
         $id = (int) $idParam;
-        $stmt = $conn->prepare('SELECT id, name, email, company, phone, created_at FROM customers WHERE id = ?');
+        $stmt = $conn->prepare('SELECT id, business_id, name, email, company, phone, created_at FROM customers WHERE id = ? AND business_id = ?');
         if (!$stmt) {
             sendJsonResponse(500, ['success' => false, 'error' => 'Failed to prepare query statement.']);
         }
 
-        $stmt->bind_param('i', $id);
+        $stmt->bind_param('ii', $id, $businessId);
         $stmt->execute();
         $result = $stmt->get_result();
 
@@ -233,36 +257,41 @@ function handleGet(mysqli $conn): void {
 
     $offset = ($page - 1) * $limit;
 
-    // A. Count Total Matching Records
+    // A. Count Total Matching Records (scoped to business_id)
     $totalRecords = 0;
     if ($search !== '') {
-        $countSql = 'SELECT COUNT(*) AS total FROM customers WHERE name LIKE ? OR company LIKE ? OR email LIKE ?';
+        $countSql = 'SELECT COUNT(*) AS total FROM customers WHERE business_id = ? AND (name LIKE ? OR company LIKE ? OR email LIKE ?)';
         $countStmt = $conn->prepare($countSql);
         if (!$countStmt) {
             sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
         }
         $searchPattern = '%' . $search . '%';
-        $countStmt->bind_param('sss', $searchPattern, $searchPattern, $searchPattern);
+        $countStmt->bind_param('isss', $businessId, $searchPattern, $searchPattern, $searchPattern);
         $countStmt->execute();
         $countRes = $countStmt->get_result()->fetch_assoc();
         $totalRecords = (int) $countRes['total'];
         $countStmt->close();
     } else {
-        $countRes = $conn->query('SELECT COUNT(*) AS total FROM customers');
-        if ($countRes) {
-            $row = $countRes->fetch_assoc();
-            $totalRecords = (int) $row['total'];
+        $countSql = 'SELECT COUNT(*) AS total FROM customers WHERE business_id = ?';
+        $countStmt = $conn->prepare($countSql);
+        if (!$countStmt) {
+            sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
         }
+        $countStmt->bind_param('i', $businessId);
+        $countStmt->execute();
+        $countRes = $countStmt->get_result()->fetch_assoc();
+        $totalRecords = (int) $countRes['total'];
+        $countStmt->close();
     }
 
     $totalPages = $totalRecords > 0 ? (int) ceil($totalRecords / $limit) : 1;
 
-    // B. Fetch Paginated Records
+    // B. Fetch Paginated Records (scoped to business_id)
     $customers = [];
     if ($search !== '') {
-        $sql = 'SELECT id, name, email, company, phone, created_at 
+        $sql = 'SELECT id, business_id, name, email, company, phone, created_at 
                 FROM customers 
-                WHERE name LIKE ? OR company LIKE ? OR email LIKE ? 
+                WHERE business_id = ? AND (name LIKE ? OR company LIKE ? OR email LIKE ?) 
                 ORDER BY id DESC 
                 LIMIT ? OFFSET ?';
         $stmt = $conn->prepare($sql);
@@ -270,7 +299,7 @@ function handleGet(mysqli $conn): void {
             sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
         }
         $searchPattern = '%' . $search . '%';
-        $stmt->bind_param('sssii', $searchPattern, $searchPattern, $searchPattern, $limit, $offset);
+        $stmt->bind_param('isssii', $businessId, $searchPattern, $searchPattern, $searchPattern, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -278,15 +307,16 @@ function handleGet(mysqli $conn): void {
         }
         $stmt->close();
     } else {
-        $sql = 'SELECT id, name, email, company, phone, created_at 
+        $sql = 'SELECT id, business_id, name, email, company, phone, created_at 
                 FROM customers 
+                WHERE business_id = ? 
                 ORDER BY id DESC 
                 LIMIT ? OFFSET ?';
         $stmt = $conn->prepare($sql);
         if (!$stmt) {
             sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
         }
-        $stmt->bind_param('ii', $limit, $offset);
+        $stmt->bind_param('iii', $businessId, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
@@ -311,7 +341,7 @@ function handleGet(mysqli $conn): void {
 /**
  * Handle POST requests (Create Customer).
  */
-function handlePost(mysqli $conn): void {
+function handlePost(mysqli $conn, array $currentUser): void {
     $payload = getRequestPayload();
 
     $errors = validateCustomerData($payload);
@@ -323,15 +353,16 @@ function handlePost(mysqli $conn): void {
         ]);
     }
 
-    $name    = trim($payload['name']);
-    $email   = trim($payload['email']);
-    $company = isset($payload['company']) ? trim($payload['company']) : '';
-    $phone   = isset($payload['phone']) ? formatIndianMobile($payload['phone']) : '';
+    $businessId = (int) $currentUser['business_id'];
+    $name       = trim($payload['name']);
+    $email      = trim($payload['email']);
+    $company    = isset($payload['company']) ? trim($payload['company']) : '';
+    $phone      = isset($payload['phone']) ? formatIndianMobile($payload['phone']) : '';
 
-    // Check for duplicate email before insert
-    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE email = ?');
+    // Check for duplicate email within the same business before insert
+    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE email = ? AND business_id = ?');
     if ($checkStmt) {
-        $checkStmt->bind_param('s', $email);
+        $checkStmt->bind_param('si', $email, $businessId);
         $checkStmt->execute();
         $checkResult = $checkStmt->get_result();
         if ($checkResult->num_rows > 0) {
@@ -344,13 +375,13 @@ function handlePost(mysqli $conn): void {
         $checkStmt->close();
     }
 
-    // Insert new customer using prepared statement
-    $stmt = $conn->prepare('INSERT INTO customers (name, email, company, phone) VALUES (?, ?, ?, ?)');
+    // Insert new customer scoped to authenticated user's business_id
+    $stmt = $conn->prepare('INSERT INTO customers (business_id, name, email, company, phone) VALUES (?, ?, ?, ?, ?)');
     if (!$stmt) {
         sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
     }
 
-    $stmt->bind_param('ssss', $name, $email, $company, $phone);
+    $stmt->bind_param('issss', $businessId, $name, $email, $company, $phone);
 
     if (!$stmt->execute()) {
         // Handle race-condition duplicate key error safely
@@ -375,12 +406,13 @@ function handlePost(mysqli $conn): void {
         'success' => true,
         'message' => 'Customer created successfully.',
         'data'    => [
-            'id'         => $newId,
-            'name'       => $name,
-            'email'      => $email,
-            'company'    => $company,
-            'phone'      => $phone,
-            'created_at' => date('Y-m-d H:i:s')
+            'id'          => $newId,
+            'business_id' => $businessId,
+            'name'        => $name,
+            'email'       => $email,
+            'company'     => $company,
+            'phone'       => $phone,
+            'created_at'  => date('Y-m-d H:i:s')
         ]
     ]);
 }
@@ -388,8 +420,9 @@ function handlePost(mysqli $conn): void {
 /**
  * Handle PUT requests (Update Customer).
  */
-function handlePut(mysqli $conn): void {
+function handlePut(mysqli $conn, array $currentUser): void {
     $payload = getRequestPayload();
+    $businessId = (int) $currentUser['business_id'];
 
     // Determine ID (from URL parameter or payload)
     $idParam = $_GET['id'] ?? ($payload['id'] ?? null);
@@ -402,12 +435,12 @@ function handlePut(mysqli $conn): void {
 
     $id = (int) $idParam;
 
-    // Verify existing record
-    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE id = ?');
+    // Verify existing record belongs to the user's business
+    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE id = ? AND business_id = ?');
     if (!$checkStmt) {
         sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
     }
-    $checkStmt->bind_param('i', $id);
+    $checkStmt->bind_param('ii', $id, $businessId);
     $checkStmt->execute();
     if ($checkStmt->get_result()->num_rows === 0) {
         $checkStmt->close();
@@ -433,10 +466,10 @@ function handlePut(mysqli $conn): void {
     $company = isset($payload['company']) ? trim($payload['company']) : '';
     $phone   = isset($payload['phone']) ? formatIndianMobile($payload['phone']) : '';
 
-    // Check duplicate email against other customers
-    $dupStmt = $conn->prepare('SELECT id FROM customers WHERE email = ? AND id != ?');
+    // Check duplicate email against other customers within the same business
+    $dupStmt = $conn->prepare('SELECT id FROM customers WHERE email = ? AND business_id = ? AND id != ?');
     if ($dupStmt) {
-        $dupStmt->bind_param('si', $email, $id);
+        $dupStmt->bind_param('sii', $email, $businessId, $id);
         $dupStmt->execute();
         if ($dupStmt->get_result()->num_rows > 0) {
             $dupStmt->close();
@@ -448,13 +481,13 @@ function handlePut(mysqli $conn): void {
         $dupStmt->close();
     }
 
-    // Execute update with prepared statement
-    $stmt = $conn->prepare('UPDATE customers SET name = ?, email = ?, company = ?, phone = ? WHERE id = ?');
+    // Execute update scoped to customer ID and business_id
+    $stmt = $conn->prepare('UPDATE customers SET name = ?, email = ?, company = ?, phone = ? WHERE id = ? AND business_id = ?');
     if (!$stmt) {
         sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
     }
 
-    $stmt->bind_param('ssssi', $name, $email, $company, $phone, $id);
+    $stmt->bind_param('ssssii', $name, $email, $company, $phone, $id, $businessId);
 
     if (!$stmt->execute()) {
         if ($stmt->errno === 1062) {
@@ -476,11 +509,12 @@ function handlePut(mysqli $conn): void {
         'success' => true,
         'message' => 'Customer updated successfully.',
         'data'    => [
-            'id'      => $id,
-            'name'    => $name,
-            'email'   => $email,
-            'company' => $company,
-            'phone'   => $phone
+            'id'          => $id,
+            'business_id' => $businessId,
+            'name'        => $name,
+            'email'       => $email,
+            'company'     => $company,
+            'phone'       => $phone
         ]
     ]);
 }
@@ -488,8 +522,9 @@ function handlePut(mysqli $conn): void {
 /**
  * Handle DELETE requests (Delete Customer).
  */
-function handleDelete(mysqli $conn): void {
+function handleDelete(mysqli $conn, array $currentUser): void {
     $payload = getRequestPayload();
+    $businessId = (int) $currentUser['business_id'];
 
     $idParam = $_GET['id'] ?? ($payload['id'] ?? null);
     if (!$idParam || !filter_var($idParam, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]])) {
@@ -501,12 +536,12 @@ function handleDelete(mysqli $conn): void {
 
     $id = (int) $idParam;
 
-    // Check existence first
-    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE id = ?');
+    // Check existence in authenticated user's business
+    $checkStmt = $conn->prepare('SELECT id FROM customers WHERE id = ? AND business_id = ?');
     if (!$checkStmt) {
         sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
     }
-    $checkStmt->bind_param('i', $id);
+    $checkStmt->bind_param('ii', $id, $businessId);
     $checkStmt->execute();
     if ($checkStmt->get_result()->num_rows === 0) {
         $checkStmt->close();
@@ -517,13 +552,13 @@ function handleDelete(mysqli $conn): void {
     }
     $checkStmt->close();
 
-    // Execute delete using prepared statement
-    $stmt = $conn->prepare('DELETE FROM customers WHERE id = ?');
+    // Execute delete scoped to business_id
+    $stmt = $conn->prepare('DELETE FROM customers WHERE id = ? AND business_id = ?');
     if (!$stmt) {
         sendJsonResponse(500, ['success' => false, 'error' => 'Query preparation failed.']);
     }
 
-    $stmt->bind_param('i', $id);
+    $stmt->bind_param('ii', $id, $businessId);
     if (!$stmt->execute()) {
         $stmt->close();
         sendJsonResponse(500, ['success' => false, 'error' => 'Failed to delete customer record.']);

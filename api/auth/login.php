@@ -52,8 +52,23 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 
 $conn = getDbConnection();
 
-// Fetch owner by email using prepared statement
-$stmt = $conn->prepare('SELECT id, name, email, company, role, password_hash FROM owners WHERE email = ?');
+// Fetch user by email from unified users table with business context using prepared statement
+$stmt = $conn->prepare('
+    SELECT 
+        u.id, 
+        u.name, 
+        u.email, 
+        u.business_id, 
+        u.company, 
+        u.department, 
+        u.role, 
+        u.status, 
+        u.password_hash,
+        b.name AS business_name
+    FROM users u
+    INNER JOIN businesses b ON u.business_id = b.id
+    WHERE u.email = ?
+');
 if (!$stmt) {
     sendJsonResponse(500, ['success' => false, 'error' => 'Database query preparation failed.']);
 }
@@ -61,13 +76,13 @@ if (!$stmt) {
 $stmt->bind_param('s', $email);
 $stmt->execute();
 $result = $stmt->get_result();
-$owner = $result->fetch_assoc();
+$user = $result->fetch_assoc();
 $stmt->close();
 
 // Generic authentication failure response to avoid leaking account existence
 $genericAuthError = 'Invalid email or password. Please verify your credentials.';
 
-if (!$owner) {
+if (!$user) {
     // Artificial delay to mitigate timing analysis attacks
     usleep(150000); // 150ms
     sendJsonResponse(401, [
@@ -76,8 +91,25 @@ if (!$owner) {
     ]);
 }
 
+// Check account active status
+if ($user['status'] !== 'active') {
+    usleep(150000);
+    sendJsonResponse(403, [
+        'success' => false,
+        'error'   => 'Account is inactive. Please contact an administrator.'
+    ]);
+}
+
+// Verify recognized role
+if (!in_array($user['role'], ['owner', 'team_member'], true)) {
+    sendJsonResponse(403, [
+        'success' => false,
+        'error'   => 'Invalid account role.'
+    ]);
+}
+
 // Verify password with PHP password_verify()
-if (!password_verify($password, $owner['password_hash'])) {
+if (!password_verify($password, $user['password_hash'])) {
     sendJsonResponse(401, [
         'success' => false,
         'error'   => $genericAuthError
@@ -88,19 +120,34 @@ if (!password_verify($password, $owner['password_hash'])) {
 initOmniSession();
 session_regenerate_id(true);
 
-$_SESSION['owner_id']    = (int) $owner['id'];
-$_SESSION['owner_email'] = $owner['email'];
-$_SESSION['owner_name']  = $owner['name'];
-$_SESSION['logged_at']   = time();
+$_SESSION['user_id']       = (int) $user['id'];
+$_SESSION['user_role']     = $user['role'];
+$_SESSION['user_email']    = $user['email'];
+$_SESSION['user_name']     = $user['name'];
+$_SESSION['business_id']   = (int) $user['business_id'];
+$_SESSION['business_name'] = $user['business_name'];
+$_SESSION['owner_id']      = (int) $user['id'];
+$_SESSION['owner_email']   = $user['email'];
+$_SESSION['owner_name']    = $user['name'];
+$_SESSION['logged_at']     = time();
+
+$userProfile = [
+    'id'            => (int) $user['id'],
+    'name'          => $user['name'],
+    'email'         => $user['email'],
+    'business_id'   => (int) $user['business_id'],
+    'business_name' => $user['business_name'],
+    'company'       => $user['company'],
+    'department'    => $user['department'],
+    'role'          => $user['role'],
+    'status'        => $user['status']
+];
 
 sendJsonResponse(200, [
     'success' => true,
-    'message' => 'Owner authentication successful.',
-    'owner'   => [
-        'id'      => (int) $owner['id'],
-        'name'    => $owner['name'],
-        'email'   => $owner['email'],
-        'company' => $owner['company'],
-        'role'    => $owner['role']
-    ]
+    'message' => 'Authentication successful.',
+    'user'    => $userProfile,
+    // Backwards-compatible alias for frontend components expecting 'owner'
+    'owner'   => $userProfile
 ]);
+

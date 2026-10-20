@@ -23,8 +23,9 @@ const PAGE_TITLES = {
  * unread-count dropdown, and the owner profile with working logout.
  */
 export default function Header({ onToggleSidebar }) {
-  const { owner, logout } = useAuth()
-  const { notifications, unreadCount, markAllAsRead, markAsRead } = useNotifications()
+  const { user, owner, logout } = useAuth()
+  const currentUser = user || owner
+  const { notifications, unreadCount, markAllAsRead, markAsRead, refreshNotifications } = useNotifications()
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -33,10 +34,11 @@ export default function Header({ onToggleSidebar }) {
 
   const title = PAGE_TITLES[location.pathname] || 'OmniOS'
 
-  // Derive initials from owner name
-  const initials = owner?.name
-    ? owner.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()
+  // Derive initials from user name
+  const initials = currentUser?.name
+    ? currentUser.name.split(' ').map((p) => p[0]).slice(0, 2).join('').toUpperCase()
     : '?'
+
 
   const recent = notifications.slice(0, 4)
 
@@ -99,7 +101,14 @@ export default function Header({ onToggleSidebar }) {
             aria-expanded={notifOpen}
             title="Notifications"
             type="button"
-            onClick={() => setNotifOpen((open) => !open)}
+            onClick={() => {
+              setNotifOpen((open) => {
+                if (!open && refreshNotifications) {
+                  refreshNotifications()
+                }
+                return !open
+              })
+            }}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -114,7 +123,11 @@ export default function Header({ onToggleSidebar }) {
             <div className="notif-panel" role="dialog" aria-label="Recent notifications">
               <div className="notif-panel-head">
                 <strong>Notifications</strong>
-                <span className="tag demo">Demo · session-only</span>
+                {unreadCount > 0 ? (
+                  <span className="tag wait">{unreadCount} unread</span>
+                ) : (
+                  <span className="tag ok">All caught up</span>
+                )}
               </div>
 
               {recent.length === 0 ? (
@@ -132,7 +145,7 @@ export default function Header({ onToggleSidebar }) {
                         <span className="notif-panel-icon" aria-hidden="true">{n.icon}</span>
                         <span className="notif-panel-text">
                           <span className="notif-panel-title">{n.title}</span>
-                          <span className="notif-panel-desc">{n.desc}</span>
+                          <span className="notif-panel-desc">{n.desc || n.message}</span>
                           <span className="notif-panel-time">{n.time}</span>
                         </span>
                         {n.unread && <span className="notif-panel-dot" aria-label="Unread" />}
@@ -159,12 +172,12 @@ export default function Header({ onToggleSidebar }) {
           )}
         </div>
 
-        {/* Owner profile + logout */}
+        {/* User profile + logout */}
         <div className="user-profile" role="group" aria-label="Signed-in user">
           <div className="user-avatar" aria-hidden="true">{initials}</div>
           <div className="user-meta">
-            <span className="user-name">{owner?.name ?? 'Owner'}</span>
-            <span className="user-role">Owner</span>
+            <span className="user-name">{currentUser?.name ?? 'User'}</span>
+            <span className="user-role">{currentUser?.role === 'team_member' ? 'Team Member' : 'Owner'}</span>
           </div>
           <button
             className="logout-btn"

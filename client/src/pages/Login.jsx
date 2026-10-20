@@ -4,7 +4,9 @@ import { useAuth } from '../context/AuthContext'
 import './Login.css'
 
 /**
- * Company Owner Login Component.
+ * Login Component (Owner & Team Member modes).
+ * A segmented switch selects the intended role for the UI copy; both modes
+ * submit to the same real session-based authentication API.
  * Demonstrates:
  * - Unit I-D: Controlled form components and validation
  * - Unit I-F: User event handling (submit, click, input changes)
@@ -13,7 +15,8 @@ import './Login.css'
  * - Unit IV-H: React Router navigation and redirection
  */
 export default function Login() {
-  const { owner, login, loading: authLoading } = useAuth()
+  const { user, owner, login, loading: authLoading } = useAuth()
+  const currentUser = user || owner
   const navigate = useNavigate()
 
   const [email, setEmail] = useState('')
@@ -22,13 +25,18 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [fieldErrors, setFieldErrors] = useState({})
+  const [mode, setMode] = useState('owner')
 
-  // Authenticated owners always land on the dashboard
+  // Authenticated users land on dashboard (owner) or tasks (team_member)
   useEffect(() => {
-    if (owner && !authLoading) {
-      navigate('/dashboard', { replace: true })
+    if (currentUser && !authLoading) {
+      if (currentUser.role === 'team_member') {
+        navigate('/tasks', { replace: true })
+      } else {
+        navigate('/dashboard', { replace: true })
+      }
     }
-  }, [owner, authLoading, navigate])
+  }, [currentUser, authLoading, navigate])
 
   const validateForm = () => {
     const errors = {}
@@ -61,10 +69,21 @@ export default function Login() {
     setSubmitting(false)
 
     if (result.success) {
-      navigate('/dashboard', { replace: true })
+      const role = result.user?.role || result.owner?.role
+      if (role === 'team_member') {
+        navigate('/tasks', { replace: true })
+      } else {
+        navigate('/dashboard', { replace: true })
+      }
     } else {
       setErrorMessage(result.error || 'Invalid email or password. Please verify your credentials.')
     }
+  }
+
+  const switchMode = (nextMode) => {
+    setMode(nextMode)
+    setErrorMessage('')
+    setFieldErrors({})
   }
 
   const fillDemoAccount = (demoEmail, demoPass) => {
@@ -89,8 +108,34 @@ export default function Login() {
       <main className="login-container">
         <div className="login-card">
           <div className="login-header">
-            <h2>Company Owner Login</h2>
-            <p>Access your OmniOS enterprise operations workspace</p>
+            <h2>{mode === 'owner' ? 'Company Owner Login' : 'Team Member Login'}</h2>
+            <p>
+              {mode === 'owner'
+                ? 'Access your OmniOS enterprise operations workspace'
+                : 'Access your assigned tasks and team workspace'}
+            </p>
+          </div>
+
+          {/* Segmented switch — Owner vs Team Member. Both use the same auth API. */}
+          <div className="login-mode-switch" role="tablist" aria-label="Select login type">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'owner'}
+              className={`login-mode-tab${mode === 'owner' ? ' active' : ''}`}
+              onClick={() => switchMode('owner')}
+            >
+              Owner Login
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'team_member'}
+              className={`login-mode-tab${mode === 'team_member' ? ' active' : ''}`}
+              onClick={() => switchMode('team_member')}
+            >
+              Team Member Login
+            </button>
           </div>
 
           {errorMessage && (
@@ -106,13 +151,13 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="form-group">
-              <label htmlFor="login-email">Owner Email Address</label>
+              <label htmlFor="login-email">{mode === 'owner' ? 'Owner Email Address' : 'Team Member Email Address'}</label>
               <div className="form-input-wrapper">
                 <input
                   id="login-email"
                   type="email"
                   className="form-input"
-                  placeholder="e.g. nirav.vala@omnios.local"
+                  placeholder={mode === 'owner' ? 'e.g. nirav.vala@omnios.local' : 'Enter your team email address'}
                   value={email}
                   onChange={(e) => {
                     setEmail(e.target.value)
@@ -133,7 +178,7 @@ export default function Login() {
                   id="login-password"
                   type={showPassword ? 'text' : 'password'}
                   className="form-input"
-                  placeholder="Enter your owner password"
+                  placeholder={mode === 'owner' ? 'Enter your owner password' : 'Enter your team member password'}
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value)
@@ -172,11 +217,12 @@ export default function Login() {
               style={{ width: '100%', marginTop: '8px', padding: '12px' }}
               disabled={submitting}
             >
-              {submitting ? 'Authenticating...' : 'Sign In as Owner'}
+              {submitting ? 'Authenticating...' : (mode === 'owner' ? 'Sign In as Owner' : 'Sign In as Team Member')}
             </button>
           </form>
 
           {/* Quick-Select Demo Owner Accounts for Viva / College Presentation */}
+          {mode === 'owner' ? (
           <div className="demo-accounts-card">
             <div className="demo-title">
               <span>Presentation Demo Accounts</span>
@@ -212,6 +258,48 @@ export default function Login() {
               </button>
             </div>
           </div>
+          ) : (
+          <>
+            <div className="demo-accounts-card">
+              <div className="demo-title">
+                <span>Team Member Demo Accounts</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>Click to Fill</span>
+              </div>
+              <div className="demo-btn-group">
+                <button
+                  type="button"
+                  className="demo-pill-btn"
+                  onClick={() => fillDemoAccount('harsh.patel@omnios.local', 'TeamMember@2026')}
+                >
+                  <div>
+                    <strong>Harsh Patel</strong>
+                    <span>Billing Department</span>
+                  </div>
+                  <code style={{ fontSize: '0.72rem', background: '#fff', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                    harsh.patel@omnios.local
+                  </code>
+                </button>
+
+                <button
+                  type="button"
+                  className="demo-pill-btn"
+                  onClick={() => fillDemoAccount('yash.shah@omnios.local', 'TeamMember@2026')}
+                >
+                  <div>
+                    <strong>Yash Shah</strong>
+                    <span>Sales Department</span>
+                  </div>
+                  <code style={{ fontSize: '0.72rem', background: '#fff', padding: '2px 6px', borderRadius: '4px', border: '1px solid var(--border-subtle)' }}>
+                    yash.shah@omnios.local
+                  </code>
+                </button>
+              </div>
+            </div>
+            <p className="login-mode-hint">
+              Sign in with the email and password your Business Owner created for you.
+            </p>
+          </>
+          )}
         </div>
       </main>
     </div>

@@ -26,22 +26,31 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 $conn = getDbConnection();
-$owner = getCurrentOwner($conn);
+$user = getCurrentUser($conn);
 
-if (!$owner) {
+if (!$user) {
     sendJsonResponse(401, [
         'authenticated' => false,
-        'error'         => 'No active owner session found.'
+        'error'         => 'No active session found.'
     ]);
 }
 
+$userProfile = [
+    'id'            => (int) $user['id'],
+    'name'          => $user['name'],
+    'email'         => $user['email'],
+    'business_id'   => (int) $user['business_id'],
+    'business_name' => $user['business_name'],
+    'company'       => $user['company'],
+    'department'    => $user['department'],
+    'role'          => $user['role'],
+    'status'        => $user['status']
+];
+
 sendJsonResponse(200, [
     'authenticated' => true,
-    'owner'         => [
-        'id'      => (int) $owner['id'],
-        'name'    => $owner['name'],
-        'email'   => $owner['email'],
-        'company' => $owner['company'],
-        'role'    => $owner['role']
-    ]
+    'user'          => $userProfile,
+    // Backwards-compatible alias for frontend expecting owner
+    'owner'         => $userProfile
 ]);
+

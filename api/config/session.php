@@ -25,31 +25,71 @@ function initOmniSession(): void {
 }
 
 /**
- * Retrieve the currently authenticated owner profile, or null if unauthenticated.
+ * Retrieve the currently authenticated user profile from the unified `users` table,
+ * or null if unauthenticated, inactive, or invalid role.
  *
  * @param mysqli $conn
  * @return array|null
  */
-function getCurrentOwner(mysqli $conn): ?array {
+function getCurrentUser(mysqli $conn): ?array {
     initOmniSession();
 
-    if (!isset($_SESSION['owner_id']) || !is_numeric($_SESSION['owner_id'])) {
+    $userId = $_SESSION['user_id'] ?? $_SESSION['owner_id'] ?? null;
+    if (!$userId || !is_numeric($userId)) {
         return null;
     }
 
-    $ownerId = (int) $_SESSION['owner_id'];
-    $stmt = $conn->prepare('SELECT id, name, email, company, role FROM owners WHERE id = ?');
+    $id = (int) $userId;
+    $stmt = $conn->prepare('
+        SELECT 
+            u.id, 
+            u.name, 
+            u.email, 
+            u.business_id, 
+            u.company, 
+            u.department, 
+            u.role, 
+            u.status,
+            b.name AS business_name
+        FROM users u
+        INNER JOIN businesses b ON u.business_id = b.id
+        WHERE u.id = ?
+    ');
     if (!$stmt) {
         return null;
     }
 
-    $stmt->bind_param('i', $ownerId);
+    $stmt->bind_param('i', $id);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($owner = $result->fetch_assoc()) {
+    if ($user = $result->fetch_assoc()) {
         $stmt->close();
-        return $owner;
+
+        // Enforce account active status and recognized roles
+        if ($user['status'] !== 'active') {
+            return null;
+        }
+
+        if (!in_array($user['role'], ['owner', 'team_member'], true)) {
+            return null;
+        }
+
+        if (empty($user['business_id'])) {
+            return null;
+        }
+
+        return [
+            'id'            => (int) $user['id'],
+            'name'          => $user['name'],
+            'email'         => $user['email'],
+            'business_id'   => (int) $user['business_id'],
+            'business_name' => $user['business_name'],
+            'company'       => $user['company'],
+            'department'    => $user['department'],
+            'role'          => $user['role'],
+            'status'        => $user['status']
+        ];
     }
 
     $stmt->close();
@@ -57,21 +97,53 @@ function getCurrentOwner(mysqli $conn): ?array {
 }
 
 /**
- * Enforce authentication on protected API endpoints.
- * Terminates with HTTP 401 if no valid owner session exists.
+ * Backwards-compatible alias for getCurrentUser.
  *
  * @param mysqli $conn
- * @return array Authenticated owner profile
+ * @return array|null
+ */
+function getCurrentOwner(mysqli $conn): ?array {
+    return getCurrentUser($conn);
+}
+
+/**
+ * Enforce authentication on protected API endpoints.
+ * Terminates with HTTP 401 if no valid user session exists.
+ *
+ * @param mysqli $conn
+ * @return array Authenticated user profile
  */
 function requireAuth(mysqli $conn): array {
-    $owner = getCurrentOwner($conn);
+    $user = getCurrentUser($conn);
 
-    if (!$owner) {
+    if (!$user) {
         sendJsonResponse(401, [
             'success' => false,
-            'error'   => 'Authentication required. Please log in as an authorized company owner.'
+            'error'   => 'Authentication required. Please log in with a valid account.'
         ]);
     }
 
-    return $owner;
+    return $user;
 }
+
+/**
+ * Enforce role-based access control on protected API endpoints.
+ * Terminates with HTTP 403 if the user lacks the required role.
+ *
+ * @param mysqli $conn
+ * @param array $allowedRoles Array of permitted role strings (e.g. ['owner'])
+ * @return array Authenticated user profile
+ */
+function requireRole(mysqli $conn, array $allowedRoles): array {
+    $user = requireAuth($conn);
+
+    if (!in_array($user['role'], $allowedRoles, true)) {
+        sendJsonResponse(403, [
+            'success' => false,
+            'error'   => 'Access denied. You do not have permission to perform this operation.'
+        ]);
+    }
+
+    return $user;
+}
+

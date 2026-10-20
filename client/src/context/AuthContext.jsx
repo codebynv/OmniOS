@@ -4,7 +4,7 @@ import { authApi } from '../services/api'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [owner, setOwner] = useState(null)
+  const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -13,15 +13,16 @@ export function AuthProvider({ children }) {
     try {
       setLoading(true)
       const data = await authApi.checkSession()
-      if (data?.authenticated && data?.owner) {
-        setOwner(data.owner)
+      const currentUser = data?.authenticated ? (data?.user || data?.owner || null) : null
+      if (currentUser) {
+        setUser(currentUser)
         setError(null)
       } else {
-        setOwner(null)
+        setUser(null)
       }
     } catch {
       // 401 unauthenticated is expected if not logged in
-      setOwner(null)
+      setUser(null)
     } finally {
       setLoading(false)
     }
@@ -35,9 +36,10 @@ export function AuthProvider({ children }) {
     setError(null)
     try {
       const data = await authApi.login({ email, password })
-      if (data?.success && data?.owner) {
-        setOwner(data.owner)
-        return { success: true, owner: data.owner }
+      const currentUser = data?.success ? (data?.user || data?.owner || null) : null
+      if (currentUser) {
+        setUser(currentUser)
+        return { success: true, user: currentUser, owner: currentUser }
       }
       throw new Error(data?.error || 'Authentication failed.')
     } catch (err) {
@@ -53,17 +55,35 @@ export function AuthProvider({ children }) {
     } catch {
       // Ignore network errors on logout
     } finally {
-      setOwner(null)
+      setUser(null)
       setError(null)
     }
   }
 
+  const isOwner = user?.role === 'owner'
+  const isTeamMember = user?.role === 'team_member'
+  // Backwards-compatible alias for existing components expecting owner
+  const owner = user
+
   return (
-    <AuthContext.Provider value={{ owner, loading, error, login, logout, checkAuth }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        owner,
+        isOwner,
+        isTeamMember,
+        loading,
+        error,
+        login,
+        logout,
+        checkAuth,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )
 }
+
 
 export function useAuth() {
   const context = useContext(AuthContext)

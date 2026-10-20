@@ -1,15 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNotifications } from '../context/NotificationsContext'
 
 /**
  * System & Pipeline Notifications Workspace.
- * Matches frontend/index.html notifications view.
- * Read/unread state is shared with the topbar bell (NotificationsContext) and
- * is session-local demo data only.
+ * Database-driven notifications populated by genuine business events.
  */
 export default function Notifications() {
-  const { notifications, unreadCount, markAllAsRead, toggleReadStatus } = useNotifications()
+  const {
+    notifications,
+    unreadCount,
+    loading,
+    error,
+    refreshNotifications,
+    markAllAsRead,
+    toggleReadStatus
+  } = useNotifications()
+
   const [filter, setFilter] = useState('all')
+
+  // Refresh notifications when page mounts
+  useEffect(() => {
+    refreshNotifications()
+  }, [refreshNotifications])
 
   const filteredNotifs = notifications.filter((n) => {
     if (filter === 'unread') return n.unread
@@ -24,24 +36,56 @@ export default function Notifications() {
           <div>
             <h3 className="panel-title">System &amp; Pipeline Notifications</h3>
             <p className="panel-subtitle">
-              Automated operational triggers across client pipeline, delivery tasks, and invoice collections
+              Automated operational triggers across client pipeline, delivery tasks, and order fulfillment
             </p>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {unreadCount > 0 && (
-              <span className="tag wait">{unreadCount} Unread Alerts</span>
+              <span className="tag wait">{unreadCount} Unread Alert{unreadCount === 1 ? '' : 's'}</span>
             )}
             <button
               type="button"
               className="btn btn-secondary btn-sm"
-              onClick={markAllAsRead}
-              disabled={unreadCount === 0}
+              onClick={async () => {
+                try {
+                  await markAllAsRead();
+                } catch (err) {
+                  // Error is already set in context, but we can show a toast if needed
+                  console.error('Mark all as read failed:', err);
+                }
+              }}
+              disabled={unreadCount === 0 || loading}
             >
               Mark All as Read
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={refreshNotifications}
+              disabled={loading}
+              title="Refresh notifications"
+            >
+              {loading ? 'Refreshing...' : 'Refresh'}
             </button>
           </div>
         </div>
       </div>
+
+      {/* Error state */}
+      {error && (
+        <div className="panel" style={{ padding: '16px 20px', marginBottom: '18px', borderColor: 'var(--red, #ef4444)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ color: 'var(--red, #ef4444)' }}>{error}</span>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={refreshNotifications}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="panel" style={{ padding: '12px 20px', marginBottom: '18px' }}>
@@ -63,15 +107,21 @@ export default function Notifications() {
             </button>
           </div>
 
-          <span className="filter-count">Click any notification to toggle read/unread — the topbar bell badge stays in sync</span>
+          <span className="filter-count">Click any notification to toggle read/unread status</span>
         </div>
       </div>
 
       {/* Notification List */}
       <div className="notif-list">
-        {filteredNotifs.length === 0 ? (
+        {loading && notifications.length === 0 ? (
           <div style={{ padding: '36px 20px', textAlign: 'center', color: 'var(--slate)' }}>
-            No notifications match your selected filter.
+            Loading notifications...
+          </div>
+        ) : filteredNotifs.length === 0 ? (
+          <div style={{ padding: '48px 20px', textAlign: 'center', color: 'var(--slate)' }}>
+            {filter === 'unread'
+              ? 'No unread notifications.'
+              : 'No notifications found. Genuine business events (such as task assignments or order updates) will appear here.'}
           </div>
         ) : (
           filteredNotifs.map((n) => (
@@ -106,7 +156,7 @@ export default function Notifications() {
                     />
                   )}
                 </div>
-                <p className="notif-desc">{n.desc}</p>
+                <p className="notif-desc">{n.desc || n.message}</p>
                 <div className="notif-time">{n.time}</div>
               </div>
             </div>

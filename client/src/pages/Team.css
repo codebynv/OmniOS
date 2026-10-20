@@ -1,0 +1,165 @@
+/* ==========================================================================
+   OmniOS Team Page Styles
+   ========================================================================== */
+
+.team-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--paper-dim);
+}
+
+.team-action-btn {
+  font-size: 0.78rem;
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.team-action-btn.danger {
+  color: var(--danger, #dc2626);
+}
+.team-action-btn.danger:hover {
+  background: var(--danger-bg, #fef2f2);
+  border-color: rgba(220, 38, 38, 0.3);
+}
+
+.team-action-btn.success {
+  color: var(--success, #16a34a);
+}
+.team-action-btn.success:hover {
+  background: var(--success-bg, #f0fdf4);
+  border-color: rgba(22, 163, 74, 0.3);
+}
+
+.team-status-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  text-transform: capitalize;
+}
+
+.team-status-tag.active {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--success, #16a34a);
+}
+
+.team-status-tag.inactive {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--slate, #64748b);
+}
+
+.team-card.inactive-card {
+  opacity: 0.85;
+  background: #fafafa;
+}
+
+.team-card.inactive-card .team-avatar-lg {
+  background: var(--slate, #64748b);
+}
+
+/* Modals */
+.team-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.team-modal-card {
+  background: var(--white, #ffffff);
+  border: 1px solid var(--line-light, #e2e8f0);
+  border-radius: var(--radius-lg, 12px);
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.team-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--paper-dim, #f1f5f9);
+}
+
+.team-modal-header h3 {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+  margin: 0;
+}
+
+.team-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.team-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  background: #f8fafc;
+  border-top: 1px solid var(--paper-dim, #f1f5f9);
+}
+
+.team-toast-success {
+  background: #f0fdf4;
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  color: #15803d;
+  padding: 12px 18px;
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideDown 0.2s ease-out;
+}
+
+.team-toast-error {
+  background: #fef2f2;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: #b91c1c;
+  padding: 12px 18px;
+  border-radius: var(--radius-md, 8px);
+  margin-bottom: 20px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
