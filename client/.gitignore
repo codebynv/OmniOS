@@ -22,3 +22,15 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Backup and temporary files
+*.bak
+*.bak2
+*.bak_*
+*.tmp
+*~
+
+# Credential dumps and sensitive local files
+*credentials*
+*creds*
+*.sql

@@ -86,9 +86,9 @@ export default function Login() {
     setFieldErrors({})
   }
 
-  const fillDemoAccount = (demoEmail, demoPass) => {
+  const fillDemoAccount = (demoEmail) => {
     setEmail(demoEmail)
-    setPassword(demoPass)
+    setPassword('')
     setErrorMessage('')
     setFieldErrors({})
   }
@@ -226,13 +226,13 @@ export default function Login() {
           <div className="demo-accounts-card">
             <div className="demo-title">
               <span>Presentation Demo Accounts</span>
-              <span style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>Click to Fill</span>
+              <span style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>Click to Fill Email</span>
             </div>
             <div className="demo-btn-group">
               <button
                 type="button"
                 className="demo-pill-btn"
-                onClick={() => fillDemoAccount('nirav.vala@omnios.local', 'OmniOwner@2026')}
+                onClick={() => fillDemoAccount('nirav.vala@omnios.local')}
               >
                 <div>
                   <strong>Nirav Vala</strong>
@@ -246,7 +246,7 @@ export default function Login() {
               <button
                 type="button"
                 className="demo-pill-btn"
-                onClick={() => fillDemoAccount('rajesh@sharmatraders.in', 'Sharma@Trade2026')}
+                onClick={() => fillDemoAccount('rajesh@sharmatraders.in')}
               >
                 <div>
                   <strong>Rajesh Sharma</strong>
@@ -263,13 +263,13 @@ export default function Login() {
             <div className="demo-accounts-card">
               <div className="demo-title">
                 <span>Team Member Demo Accounts</span>
-                <span style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>Click to Fill</span>
+                <span style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', fontWeight: 'bold' }}>Click to Fill Email</span>
               </div>
               <div className="demo-btn-group">
                 <button
                   type="button"
                   className="demo-pill-btn"
-                  onClick={() => fillDemoAccount('harsh.patel@omnios.local', 'TeamMember@2026')}
+                  onClick={() => fillDemoAccount('harsh.patel@omnios.local')}
                 >
                   <div>
                     <strong>Harsh Patel</strong>
@@ -283,7 +283,7 @@ export default function Login() {
                 <button
                   type="button"
                   className="demo-pill-btn"
-                  onClick={() => fillDemoAccount('yash.shah@omnios.local', 'TeamMember@2026')}
+                  onClick={() => fillDemoAccount('yash.shah@omnios.local')}
                 >
                   <div>
                     <strong>Yash Shah</strong>

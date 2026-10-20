@@ -183,6 +183,12 @@ To make backend-dependent functionality work in production:
 - Multi-currency support is not implemented; the workspace uses INR.
 - AI automation is a future direction, not a currently running AI service.
 
+### Historical Credentials in Git History
+
+Historical commits in this repository contain local-development demo credentials and XAMPP database defaults (`root` user with an empty password) intended for the student demo setup. These values were intended for local XAMPP development, including `.local` domains and `127.0.0.1` defaults. No PHP/MySQL backend is currently deployed publicly; the Vercel demo serves only the React frontend.
+
+Contributors must supply credentials through environment variables (see `.env.example` and `docs/DEMO_GUIDE.md`). The current working tree has no hardcoded password fallbacks in executable source. Anyone deploying the PHP/MySQL backend must configure unique, secure credentials and must not reuse demo accounts.
+
 ## Roadmap
 
 - [x] React workspace frontend and routing

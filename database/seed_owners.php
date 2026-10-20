@@ -24,18 +24,28 @@ if (!$conn->query($createTableSql)) {
     die("Failed to create owners table: " . $conn->error . PHP_EOL);
 }
 
+// Passwords must be provided via DEMO_OWNER1_PASS and DEMO_OWNER2_PASS environment variables.
+// In local development, set these before running the seeder.
+$demoOwner1Pass = getenv('DEMO_OWNER1_PASS');
+$demoOwner2Pass = getenv('DEMO_OWNER2_PASS');
+
+if ($demoOwner1Pass === false || $demoOwner1Pass === '' || $demoOwner2Pass === false || $demoOwner2Pass === '') {
+    die("Required environment variables DEMO_OWNER1_PASS and DEMO_OWNER2_PASS must be set. " .
+        "Please set them before running the seeder." . PHP_EOL);
+}
+
 $owners = [
     [
         'name'     => 'Nirav Vala',
         'email'    => 'nirav.vala@omnios.local',
         'company'  => 'Sharma Office Supplies',
-        'password' => 'OmniOwner@2026'
+        'password' => $demoOwner1Pass
     ],
     [
         'name'     => 'Rajesh Sharma',
         'email'    => 'rajesh@sharmatraders.in',
         'company'  => 'Sharma Office Supplies',
-        'password' => 'Sharma@Trade2026'
+        'password' => $demoOwner2Pass
     ]
 ];
 

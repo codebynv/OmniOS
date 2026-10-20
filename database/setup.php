@@ -70,43 +70,59 @@ if ($conn->query($ownersTableSql)) {
 // ─────────────────────────────────────────────
 // 3. Seed demo owner accounts
 // ─────────────────────────────────────────────
-$owners = [
-    [
-        'name'     => 'Nirav Vala',
-        'email'    => 'nirav.vala@omnios.local',
-        'company'  => 'Sharma Office Supplies',
-        'password' => 'OmniOwner@2026'
-    ],
-    [
-        'name'     => 'Rajesh Sharma',
-        'email'    => 'rajesh@sharmatraders.in',
-        'company'  => 'Sharma Office Supplies',
-        'password' => 'Sharma@Trade2026'
-    ]
-];
+// Passwords must be provided via DEMO_OWNER1_PASS and DEMO_OWNER2_PASS environment variables.
+// In local development, set these before running the script.
+// Example: DEMO_OWNER1_PASS=yourpass DEMO_OWNER2_PASS=yourpass php setup.php
+$demoOwner1Pass = getenv('DEMO_OWNER1_PASS');
+$demoOwner2Pass = getenv('DEMO_OWNER2_PASS');
 
-$ownerStmt = $conn->prepare(
-    "INSERT INTO `owners` (`name`, `email`, `company`, `role`, `password_hash`)
-     VALUES (?, ?, ?, 'owner', ?)
-     ON DUPLICATE KEY UPDATE
-       `name`          = VALUES(`name`),
-       `company`       = VALUES(`company`),
-       `password_hash` = VALUES(`password_hash`)"
-);
-
-if ($ownerStmt) {
-    foreach ($owners as $owner) {
-        $hash = password_hash($owner['password'], PASSWORD_DEFAULT);
-        $ownerStmt->bind_param('ssss', $owner['name'], $owner['email'], $owner['company'], $hash);
-        if ($ownerStmt->execute()) {
-            $results[] = ['status' => 'ok', 'msg' => "Owner seeded: {$owner['name']} ({$owner['email']})"];
-        } else {
-            $results[] = ['status' => 'error', 'msg' => "Owner seed error: " . $ownerStmt->error];
-        }
-    }
-    $ownerStmt->close();
+if ($demoOwner1Pass === false || $demoOwner1Pass === '' || $demoOwner2Pass === false || $demoOwner2Pass === '') {
+    $results[] = [
+        'status' => 'error',
+        'msg' => 'Required environment variables DEMO_OWNER1_PASS and DEMO_OWNER2_PASS must be set. ' .
+                 'Please set them before running the setup script.'
+    ];
 } else {
-    $results[] = ['status' => 'error', 'msg' => 'Owner statement prep failed: ' . $conn->error];
+    $owners = [
+        [
+            'name'     => 'Nirav Vala',
+            'email'    => 'nirav.vala@omnios.local',
+            'company'  => 'Sharma Office Supplies',
+            'password' => $demoOwner1Pass
+        ],
+        [
+            'name'     => 'Rajesh Sharma',
+            'email'    => 'rajesh@sharmatraders.in',
+            'company'  => 'Sharma Office Supplies',
+            'password' => $demoOwner2Pass
+        ]
+    ];
+}
+
+if (isset($owners)) {
+    $ownerStmt = $conn->prepare(
+        "INSERT INTO `owners` (`name`, `email`, `company`, `role`, `password_hash`)
+         VALUES (?, ?, ?, 'owner', ?)
+         ON DUPLICATE KEY UPDATE
+           `name`          = VALUES(`name`),
+           `company`       = VALUES(`company`),
+           `password_hash` = VALUES(`password_hash`)"
+    );
+
+    if ($ownerStmt) {
+        foreach ($owners as $owner) {
+            $hash = password_hash($owner['password'], PASSWORD_DEFAULT);
+            $ownerStmt->bind_param('ssss', $owner['name'], $owner['email'], $owner['company'], $hash);
+            if ($ownerStmt->execute()) {
+                $results[] = ['status' => 'ok', 'msg' => "Owner seeded: {$owner['name']} ({$owner['email']})"];
+            } else {
+                $results[] = ['status' => 'error', 'msg' => "Owner seed error: " . $ownerStmt->error];
+            }
+        }
+        $ownerStmt->close();
+    } else {
+        $results[] = ['status' => 'error', 'msg' => 'Owner statement prep failed: ' . $conn->error];
+    }
 }
 
 // ─────────────────────────────────────────────

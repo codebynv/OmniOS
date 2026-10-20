@@ -152,19 +152,29 @@ foreach (['businesses', 'users', 'owners', 'customers', 'tasks', 'orders', 'orde
 }
 $preTestMaxNotifId = (int) ($conn->query("SELECT COALESCE(MAX(id), 0) AS m FROM notifications")->fetch_assoc()['m'] ?? 0);
 
-// Login Owner 1 (Nirav, Business 1)
+// Login Owner 1 (Nirav, Business 1) - requires TEST_OWNER1_PASS environment variable
+$testOwner1Pass = getenv('TEST_OWNER1_PASS');
+if ($testOwner1Pass === false || $testOwner1Pass === '') {
+    echo " [FAIL] TEST_OWNER1_PASS environment variable must be set to run this test.\n";
+    exit(1);
+}
 $loginNirav = makeRequest("$baseUrl/auth/login.php", "POST", [
     'email' => 'nirav.vala@omnios.local',
-    'password' => 'OmniOwner@2026'
+    'password' => $testOwner1Pass
 ]);
 $niravCookies = $loginNirav['cookies'];
 $niravUser = $loginNirav['body']['user'] ?? null;
 assertTest("Login Nirav (Owner, Business 1) succeeded", $loginNirav['code'] === 200 && $niravUser !== null);
 
-// Login Owner 2 (Rajesh, Business 2)
+// Login Owner 2 (Rajesh, Business 2) - requires TEST_OWNER2_PASS environment variable
+$testOwner2Pass = getenv('TEST_OWNER2_PASS');
+if ($testOwner2Pass === false || $testOwner2Pass === '') {
+    echo " [FAIL] TEST_OWNER2_PASS environment variable must be set to run this test.\n";
+    exit(1);
+}
 $loginRajesh = makeRequest("$baseUrl/auth/login.php", "POST", [
     'email' => 'rajesh@sharmatraders.in',
-    'password' => 'Sharma@Trade2026'
+    'password' => $testOwner2Pass
 ]);
 $rajeshCookies = $loginRajesh['cookies'];
 $rajeshUser = $loginRajesh['body']['user'] ?? null;
@@ -181,7 +191,11 @@ if ($rajeshUser) {
 
 // Create Temp Team Member 1 in Business 1
 $tempTechEmail = 'temp_tech_p4i_' . time() . '@sharma-supplies.in';
-$tempTechPassword = 'Password@123';
+$tempTechPassword = getenv('TEST_TEMP_PASSWORD');
+if ($tempTechPassword === false || $tempTechPassword === '') {
+    echo " [FAIL] TEST_TEMP_PASSWORD environment variable must be set to run this test.\n";
+    exit(1);
+}
 $createMemberRes = makeRequest("$baseUrl/team.php", "POST", [
     'name' => 'Phase4I Test Member 1',
     'email' => $tempTechEmail,

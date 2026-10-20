@@ -17,7 +17,27 @@ function initOmniSession(): void {
         ini_set('session.cookie_httponly', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_samesite', 'Lax');
-        
+
+        // Secure cookie only on HTTPS.
+        // Trust X-Forwarded-Proto ONLY when TRUSTED_PROXY=1 is explicitly set.
+        // The reverse proxy MUST strip client-supplied forwarding headers and set its own trusted value.
+        $isHttps = false;
+        if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+            $isHttps = true;
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO'])
+            && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https'
+            && (getenv('TRUSTED_PROXY') === '1' || getenv('TRUSTED_PROXY') === 'true')) {
+            // TRUSTED_PROXY=1 indicates deployment behind a configured reverse proxy
+            // that strips external X-Forwarded-Proto and injects its own.
+            $isHttps = true;
+        } elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] === '443') {
+            $isHttps = true;
+        }
+
+        if ($isHttps) {
+            ini_set('session.cookie_secure', '1');
+        }
+
         // Session name specific to OmniOS
         session_name('OMNIOS_SESSID');
         session_start();

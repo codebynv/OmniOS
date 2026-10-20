@@ -13,6 +13,14 @@ database/backups/
 *.tmp
 *~
 
+# Credential dumps and sensitive local files
+*credentials*
+*creds*
+*.sql
+!database/migrations/*.sql
+!database/schema.sql
+!database/auth_schema.sql
+
 # Node dependencies
 node_modules/
 
