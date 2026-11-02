@@ -1,13 +1,10 @@
 <?php
 /**
- * OmniOS System & Database Health Check Endpoint
- *
- * Verifies that Apache/PHP and the MySQL database connection are operational.
- * Returns HTTP 200 if connected, or HTTP 503 if the database is unavailable.
+ * OmniOS System & Database Health Check Endpoint.
+ * Returns 200 only when the database and required health-check table are available.
  */
 
-// Handle CORS Preflight OPTIONS request
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Methods: GET, OPTIONS');
     header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
@@ -17,43 +14,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once __DIR__ . '/config/db.php';
 
-// Check database connection without dying immediately
 $conn = getDbConnection(true);
-
 if (!$conn) {
     sendJsonResponse(503, [
-        'status'        => 'degraded',
-        'service'       => 'OmniOS API',
-        'php_version'   => PHP_VERSION,
-        'database'      => 'disconnected',
-        'database_name' => DB_NAME,
-        'message'       => 'PHP is active, but the MySQL database connection failed.',
-        'timestamp'     => date('c')
+        'status' => 'degraded',
+        'service' => 'OmniOS API',
+        'database' => 'disconnected',
+        'message' => 'The database connection is unavailable.',
+        'timestamp' => date('c'),
     ]);
 }
 
-// Check if `customers` table exists and count records
-$customerCount = 0;
-$tableExists = false;
 $result = $conn->query("SHOW TABLES LIKE 'customers'");
-if ($result && $result->num_rows > 0) {
-    $tableExists = true;
-    $countResult = $conn->query("SELECT COUNT(*) AS total FROM customers");
-    if ($countResult) {
-        $row = $countResult->fetch_assoc();
-        $customerCount = (int) $row['total'];
-    }
+if (!$result) {
+    $conn->close();
+    sendJsonResponse(503, [
+        'status' => 'degraded',
+        'service' => 'OmniOS API',
+        'database' => 'connected',
+        'table_ready' => false,
+        'message' => 'The database schema health check failed.',
+        'timestamp' => date('c'),
+    ]);
 }
 
+$tableExists = $result->num_rows > 0;
+if (!$tableExists) {
+    $conn->close();
+    sendJsonResponse(503, [
+        'status' => 'degraded',
+        'service' => 'OmniOS API',
+        'database' => 'connected',
+        'table_ready' => false,
+        'message' => 'The required customers table is unavailable.',
+        'timestamp' => date('c'),
+    ]);
+}
+
+$countResult = $conn->query('SELECT COUNT(*) AS total FROM customers');
+if (!$countResult) {
+    $conn->close();
+    sendJsonResponse(503, [
+        'status' => 'degraded',
+        'service' => 'OmniOS API',
+        'database' => 'connected',
+        'table_ready' => true,
+        'message' => 'The customers table could not be queried.',
+        'timestamp' => date('c'),
+    ]);
+}
+
+$customerCount = (int) $countResult->fetch_assoc()['total'];
 $conn->close();
 
 sendJsonResponse(200, [
-    'status'          => 'ok',
-    'service'         => 'OmniOS API',
-    'php_version'     => PHP_VERSION,
-    'database'        => 'connected',
-    'database_name'   => DB_NAME,
-    'table_ready'     => $tableExists,
+    'status' => 'ok',
+    'service' => 'OmniOS API',
+    'database' => 'connected',
+    'table_ready' => true,
     'customers_count' => $customerCount,
-    'timestamp'       => date('c')
+    'timestamp' => date('c'),
 ]);
