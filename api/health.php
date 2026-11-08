@@ -65,6 +65,8 @@ if (!$countResult) {
 }
 
 $customerCount = (int) $countResult->fetch_assoc()['total'];
+$countResult->free();
+$result->free();
 $conn->close();
 
 sendJsonResponse(200, [
